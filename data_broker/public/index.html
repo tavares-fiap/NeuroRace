@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Nível de Atenção</title>
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #f0f2f5;
+      margin: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    canvas {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard - Nível de Atenção em Tempo Real</h1>
+  <p><strong>Valor Atual:</strong> <span id="current-attention">Aguardando...</span></p>
+  <canvas id="attentionChart"></canvas>
+
+  <script>
+    const socket = io();
+
+    const ctx = document.getElementById('attentionChart').getContext('2d');
+    const attentionData = {
+      labels: [],
+      datasets: [{
+        label: 'Atenção (Média Móvel)',
+        data: [],
+        fill: false,
+        borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.1
+      }]
+    };
+
+    const attentionChart = new Chart(ctx, {
+      type: 'line',
+      data: attentionData,
+      options: {
+        scales: {
+          x: { title: { display: true, text: 'Tempo' } },
+          y: { title: { display: true, text: 'Atenção' }, min: 0, max: 100 }
+        }
+      }
+    });
+
+    socket.on('attention', (data) => {
+      const timestamp = new Date().toLocaleTimeString();
+      const attention = parseFloat(data.attention.toFixed(2));
+
+      document.getElementById('current-attention').innerText = attention;
+
+      attentionData.labels.push(timestamp);
+      attentionData.datasets[0].data.push(attention);
+
+      // Limitar o número de pontos no gráfico (ex: últimos 30)
+      if (attentionData.labels.length > 30) {
+        attentionData.labels.shift();
+        attentionData.datasets[0].data.shift();
+      }
+
+      attentionChart.update();
+    });
+  </script>
+</body>
+</html>
