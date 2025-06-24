@@ -1,5 +1,5 @@
 # Node
-data_broker/node_modules/
+/data_broker/node_modules/
 
 # Python bytecode
 __pycache__/
