@@ -1,4 +1,5 @@
 const io = require('socket.io')(3000);  // abre WS em 3000
+console.log("Broker conectado, aguardando conexao...")
 io.on('connection', socket => {
   console.log('Cliente conectado:', socket.id);
   socket.on('attention', data => {
