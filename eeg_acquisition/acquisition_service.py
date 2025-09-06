@@ -1,6 +1,9 @@
-import socket, json
-from config import HOST, ACQUISITION_PORT, BUFFER_SIZE, N_READINGS, POOR_SIGNAL_LEVEL_THRESHOLD, BROKER_URL
+import os, socket, json
+from config import HOST, BUFFER_SIZE, N_READINGS, POOR_SIGNAL_LEVEL_THRESHOLD, BROKER_URL
 import socketio
+
+PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
+ACQ_PORT  = int(os.getenv('ACQ_PORT', '13854'))
 
 window = []
 
@@ -17,7 +20,7 @@ def filter_attention(packet):
 
 def start_acquisition_service():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((HOST, ACQUISITION_PORT))
+    client.connect((HOST, ACQ_PORT))
     sio = socketio.Client()
     sio.connect(BROKER_URL)
     try:
@@ -38,7 +41,7 @@ def start_acquisition_service():
                     print("\n-----sent attention=----")
                     print(att_smooth)
                     sio.emit('attention', {
-                        'player': 1,
+                        'player': PLAYER_ID,
                         'attention': att_smooth
                     })
 
