@@ -174,8 +174,6 @@ Dicas:
 { "player": 1 | 2, "attention": <float> }
 ```
 
-**Placeholders para imagens do jogo (substitua pelos seus prints):**
-
 > ![Jogo — Tela dividida](./images/game1.png)
 > *Legenda: Imagens do jogo em desenvolvimento.*
 
@@ -184,8 +182,6 @@ Dicas:
 ## 📊 Dashboard — Status & Demonstrações
 
 **Status:** protótipo em teste (UI/estética em definição) — **não está neste repositório** ainda.
-
-**Placeholders para imagens do dashboard (substitua pelos seus prints):**
 
 > ![Dashboard — UI A](./images/dashboard1.gif)
 > *Legenda: Prototipo do dashboard*
