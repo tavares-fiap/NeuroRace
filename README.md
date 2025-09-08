@@ -174,7 +174,7 @@ Dicas:
 { "player": 1 | 2, "attention": <float> }
 ```
 
-> ![Jogo — Tela dividida](./images/game1.png)
+> ![Jogo — Tela dividida](./images/game2.png)
 > *Legenda: Imagens do jogo em desenvolvimento.*
 
 ---
