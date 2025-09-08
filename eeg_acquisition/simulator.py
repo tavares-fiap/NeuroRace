@@ -1,5 +1,8 @@
-import socket, json, time, random
-from config import HOST, ACQUISITION_PORT, PACKET_INTERVAL
+import socket, json, time, random, os
+
+HOST_BIND = '0.0.0.0'                         # <- aceita conexões externas
+PORT = int(os.getenv('ACQ_PORT', '13854'))    # <- porta via env
+PACKET_INTERVAL = float(os.getenv('PACKET_INTERVAL', '1.0'))
 
 def generate_eeg_power():
     return {
@@ -41,9 +44,10 @@ def handle_client(conn, addr):
 
 def start_server():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind((HOST, ACQUISITION_PORT))
+    server.bind((HOST_BIND, PORT))
     server.listen(1)
-    print(f"TGC Simulator ouvindo em {HOST}:{ACQUISITION_PORT}")
+    print(f"[SIM] TGC Simulator ouvindo em {HOST_BIND}:{PORT}")
+
     try:
         conn, addr = server.accept()
         handle_client(conn, addr)

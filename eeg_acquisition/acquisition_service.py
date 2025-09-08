@@ -1,9 +1,16 @@
 import os, socket, json
-from config import HOST, BUFFER_SIZE, N_READINGS, POOR_SIGNAL_LEVEL_THRESHOLD, BROKER_URL
 import socketio
 
 PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
 ACQ_PORT  = int(os.getenv('ACQ_PORT', '13854'))
+HOST = os.getenv('EEG_HOST', '127.0.0.1')
+BROKER_URL = os.getenv('BROKER_URL', 'http://broker:3000')
+
+print(f"[ACQ] EEG_HOST={HOST} PORT={ACQ_PORT} BROKER_URL={BROKER_URL}")
+
+BUFFER_SIZE = 4096
+N_READINGS = int(os.getenv('N_READINGS', '5')) # janela de leituras para média móvel (rolling window)
+POOR_SIGNAL_LEVEL_THRESHOLD = int(os.getenv('POOR_SIGNAL_LEVEL_THRESHOLD', '100')) # com o neurosky, provavelmente o limite sera 0. Por enquanto usamos 100 pois sao numeros completamente aleatorios
 
 window = []
 
