@@ -50,13 +50,10 @@ services:
       - simulator-b
 
   dashboard:
-    # Constrói a imagem a partir do Dockerfile na pasta /dashboard
     build: ./dashboard
-    # Mapeia a porta 8000 da sua máquina para a porta 80 do contêiner NGINX.
-    # A porta 80 é a porta padrão que o NGINX usa para servir sites.
+
     ports:
       - "8000:80"
-    # Garante que o dashboard só inicie depois que o broker estiver pronto,
-    # evitando que o frontend carregue antes que a API esteja disponível.
+
     depends_on:
       - broker
