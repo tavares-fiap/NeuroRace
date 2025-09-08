@@ -378,7 +378,7 @@ body {
 .player-selector-container {
     display: flex;
     gap: 0.5rem;
-    background: rgba(0, 0, 0, 0.2);
+    background: transparent;
     padding: 0.5rem;
     border-radius: 10px;
 }
@@ -414,6 +414,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1rem; /* Adicionado para espaçamento */
-    flex-wrap: wrap; /* Permite que os itens quebrem a linha em telas menores */
+    gap: 1rem;
+    flex-wrap: wrap;
 }
