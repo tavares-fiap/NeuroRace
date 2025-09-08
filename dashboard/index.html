@@ -31,6 +31,8 @@
         rel="stylesheet"
     />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 </head>
 <body>
     <header class="dashboard-header">
@@ -51,6 +53,14 @@
     </header>
 
     <main class="dashboard-main">
+        <div class="main-player-controls">
+            <h4>Monitorando Jogador:</h4>
+            <div class="player-selector-container">
+                <button class="player-selector active" data-player-id="1">Player 1</button>
+                <button class="player-selector" data-player-id="2">Player 2</button>
+            </div>
+        </div>
+        
         <section class="metrics-grid">
             <div class="metric-card attention-card" data-tooltip="Sua média de atenção durante a sessão atual. Mantenha alta para mais velocidade!">
                 <div class="card-header">
@@ -115,7 +125,12 @@
 
         <section class="attention-monitor">
             <div class="monitor-header">
-                <h2>Monitor de Atenção em Tempo Real</h2>
+                <h2>Monitor de Atenção em Tempo Real (Player 1 x Player 2)</h2>
+                <!-- <div class="player-selector-container">
+                    <button class="player-selector active" data-player-id="1">Player 1</button>
+                    <button class="player-selector" data-player-id="2">Player 2</button>
+                </div> -->
+
                 <div class="attention-zone" id="attentionZone">
                     <span class="zone-indicator">ZONA NEUTRA</span>
                 </div>
@@ -208,6 +223,6 @@
 
     <script src="charts.js"></script>
     <script src="dashboard.js"></script>
-    <script src="websocket.js"></script>
+    <!-- <script src="websocket.js"></script> -->
 </body>
 </html>

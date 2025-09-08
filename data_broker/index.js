@@ -1,7 +1,7 @@
 // server.js
 const io = require('socket.io')(3000, {
   cors: {
-    origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:5173'],
+    origin: ['http://localhost:8080', 'http://127.0.0.1:8080', 'http://localhost:5173', 'http://localhost:8000'],
     methods: ['GET', 'POST'],
     credentials: true
   }
