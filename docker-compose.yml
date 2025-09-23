@@ -5,23 +5,23 @@ services:
     ports: 
       - "3000:3000"
 
-  simulator-a:
-    build: ./eeg_acquisition
-    environment:
-      ACQ_PORT: "13854"
-      PACKET_INTERVAL: "0.2"
-    command: python simulator.py
-    ports: 
-      - "13854:13854"
+  # simulator-a:
+  #   build: ./eeg_acquisition
+  #   environment:
+  #     ACQ_PORT: "13854"
+  #     PACKET_INTERVAL: "0.2"
+  #   command: python simulator.py
+  #   ports: 
+  #     - "13854:13854"
 
-  simulator-b:
-    build: ./eeg_acquisition
-    environment:
-      ACQ_PORT: "13855"
-      PACKET_INTERVAL: "0.2"
-    command: python simulator.py
-    ports:
-      - "13855:13855"
+  # simulator-b:
+  #   build: ./eeg_acquisition
+  #   environment:
+  #     ACQ_PORT: "13855"
+  #     PACKET_INTERVAL: "0.2"
+  #   command: python simulator.py
+  #   ports:
+  #     - "13855:13855"
 
   acquisition-a:
     build: ./eeg_acquisition
@@ -39,15 +39,15 @@ services:
       - broker
       # - simulator-a
 
-  acquisition-b:
-    build: ./eeg_acquisition
-    environment:
-      PLAYER_ID: "2"
-      ACQ_PORT: "13855"
-      BROKER_URL: "http://broker:3000"
-      POOR_SIGNAL_LEVEL_THRESHOLD: "100"
-      EEG_HOST: "simulator-b"
-    command: python acquisition_service.py
-    depends_on: 
-      - broker
-      - simulator-b
+  # acquisition-b:
+  #   build: ./eeg_acquisition
+  #   environment:
+  #     PLAYER_ID: "2"
+  #     ACQ_PORT: "13855"
+  #     BROKER_URL: "http://broker:3000"
+  #     POOR_SIGNAL_LEVEL_THRESHOLD: "100"
+  #     EEG_HOST: "simulator-b"
+  #   command: python acquisition_service.py
+  #   depends_on: 
+  #     - broker
+  #     - simulator-b
