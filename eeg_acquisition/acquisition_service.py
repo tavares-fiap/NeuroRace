@@ -1,6 +1,7 @@
 import os, socket, json
 import socketio
 
+SOURCE = os.getenv("EEG_SOURCE", "sim")
 PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
 ACQ_PORT  = int(os.getenv('ACQ_PORT', '13854'))
 HOST = os.getenv('EEG_HOST', '127.0.0.1')
@@ -10,7 +11,7 @@ print(f"[ACQ] EEG_HOST={HOST} PORT={ACQ_PORT} BROKER_URL={BROKER_URL}")
 
 BUFFER_SIZE = 4096
 N_READINGS = int(os.getenv('N_READINGS', '5')) # janela de leituras para média móvel (rolling window)
-POOR_SIGNAL_LEVEL_THRESHOLD = int(os.getenv('POOR_SIGNAL_LEVEL_THRESHOLD', '100')) # com o neurosky, provavelmente o limite sera 0. Por enquanto usamos 100 pois sao numeros completamente aleatorios
+POOR_SIGNAL_LEVEL_THRESHOLD = int(os.getenv('POOR_SIGNAL_LEVEL_THRESHOLD', '50')) # com o neurosky, provavelmente o limite sera 0. Por enquanto usamos 100 pois sao numeros completamente aleatorios
 
 window = []
 
@@ -28,6 +29,8 @@ def filter_attention(packet):
 def start_acquisition_service():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((HOST, ACQ_PORT))
+    #handshake
+    client.sendall(b'{"enableRawOutput": false, "format": "Json"}')
     sio = socketio.Client()
     sio.connect(BROKER_URL)
     try:
@@ -40,10 +43,19 @@ def start_acquisition_service():
             buffer += data.decode('utf-8')
             while '\r' in buffer:
                 raw, buffer = buffer.split('\r', 1)
-                packet = json.loads(raw)
+                raw = raw.strip()
+                if not raw:
+                    continue
+                try:
+                    packet = json.loads(raw)
+                except json.JSONDecodeError:
+                    continue
+            # while '\r' in buffer:
+            #     raw, buffer = buffer.split('\r', 1)
+            #     packet = json.loads(raw)
                 print("\n-----received data----")
                 print(packet)
-                if 'eSense' in packet and packet['poorSignalLevel'] <= POOR_SIGNAL_LEVEL_THRESHOLD:
+                if 'eSense' in packet and packet.get('poorSignalLevel', 200) <= POOR_SIGNAL_LEVEL_THRESHOLD:
                     att_smooth = filter_attention(packet)
                     print("\n-----sent attention=----")
                     print(att_smooth)

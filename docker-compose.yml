@@ -25,16 +25,19 @@ services:
 
   acquisition-a:
     build: ./eeg_acquisition
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       PLAYER_ID: "1"
       ACQ_PORT: "13854"
       BROKER_URL: "http://broker:3000"
-      POOR_SIGNAL_LEVEL_THRESHOLD: "100"
-      EEG_HOST: "simulator-a"
+      POOR_SIGNAL_LEVEL_THRESHOLD: "50"
+      # EEG_HOST: "simulator-a"
+      EEG_HOST: "host.docker.internal" 
     command: python acquisition_service.py
     depends_on: 
       - broker
-      - simulator-a
+      # - simulator-a
 
   acquisition-b:
     build: ./eeg_acquisition
