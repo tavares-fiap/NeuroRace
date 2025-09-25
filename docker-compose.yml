@@ -18,7 +18,7 @@ services:
     build: ./eeg_acquisition
     environment:
       ACQ_PORT: "13855"
-      PACKET_INTERVAL: "0.2"
+      PACKET_INTERVAL: "1.0"
     command: python simulator.py
     ports:
       - "13855:13855"
