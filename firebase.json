@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "Frontend-Ranking",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

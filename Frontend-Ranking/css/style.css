@@ -1,0 +1,170 @@
+/* --- ESTILOS GERAIS --- */
+body {
+    background-color: #0d1117; /* Tom de azul escuro/preto, como na imagem */
+    color: #c9d1d9; /* Cor de texto principal (cinza claro) */
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+}
+
+/* --- CABEÇALHO E TÍTULOS --- */
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #bf46f3, #4c66f4); /* Gradiente Roxo-Azul da imagem */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #8b949e; /* Cinza para o subtítulo */
+}
+
+/* --- LISTA DO RANKING --- */
+#ranking-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* --- ITEM INDIVIDUAL DO RANKING (O CARD) --- */
+.ranking-item {
+    background-color: #161b22; /* Fundo do card */
+    border: 1px solid #30363d; /* Borda padrão cinza escura */
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: border-color 0.2s ease-in-out;
+}
+
+/* Destaque para o primeiro lugar, como na imagem */
+.ranking-item.first-place {
+    border-color: #f1c40f; /* Borda dourada para o #1 */
+    box-shadow: 0 0 15px rgba(241, 196, 15, 0.2);
+}
+
+.rank-info-group {
+    display: flex;
+    align-items: center;
+    gap: 25px; /* Espaço entre o número e as informações do jogador */
+}
+
+.rank-position {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #8b949e; /* Cor cinza para a posição */
+    width: 40px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.rank-position .crown {
+    font-size: 1.5rem;
+    color: #f1c40f;
+    margin-bottom: -10px; /* Ajusta a coroa para ficar em cima do número */
+}
+
+.player-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.player-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #f0f6fc; /* Branco um pouco mais suave */
+}
+
+.player-attention {
+    font-size: 0.9rem;
+    color: #8b949e; /* Cinza para a média de atenção */
+}
+
+.player-score {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #38bdf8; /* Azul/Ciano vibrante para a pontuação */
+}
+/* --- ESTILOS PARA A PÁGINA DE CORRIDA FINALIZADA --- */
+
+.finished-container {
+    padding-top: 50px;
+}
+
+.players-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap; /* Permite que os cards quebrem a linha em telas menores */
+    margin-top: 40px;
+}
+
+.player-card {
+    background-color: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 30px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-top-width: 5px; /* Borda superior mais grossa para o efeito neon */
+}
+
+/* Cores neon das bordas */
+#player-1-card {
+    border-top-color: #38bdf8; /* Azul */
+}
+
+#player-2-card {
+    border-top-color: #f43f82; /* Rosa/Magenta */
+}
+
+.player-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #f0f6fc;
+}
+
+.final-score {
+    font-size: 1.1rem;
+    color: #8b949e;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.qrcode {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* Estilo para a imagem do QR Code gerado */
+.qrcode img {
+    display: block;
+    width: 200px !important;
+    height: 200px !important;
+}
