@@ -55,13 +55,23 @@ def start_acquisition_service():
             #     packet = json.loads(raw)
                 print("\n-----received data----")
                 print(packet)
-                if 'eSense' in packet and packet.get('poorSignalLevel', 200) <= POOR_SIGNAL_LEVEL_THRESHOLD:
-                    att_smooth = filter_attention(packet)
-                    print("\n-----sent attention=----")
-                    print(att_smooth)
-                    sio.emit('attention', {
+                if 'blinkStrength' in packet:
+                    sio.emit('blink', {
                         'player': PLAYER_ID,
-                        'attention': att_smooth
+                        'blink': packet['blinkStrength']
+                    })
+                if 'eSense' in packet and packet.get('poorSignalLevel', 200) <= POOR_SIGNAL_LEVEL_THRESHOLD:
+                    # att_smooth = filter_attention(packet)
+                    # print("\n-----sent attention=----")
+                    # print(att_smooth)
+                    # sio.emit('attention', {
+                    #     'player': PLAYER_ID,
+                    #     'attention': att_smooth
+                    # })
+                    sio.emit('eSense', {
+                        'player': PLAYER_ID,
+                        'attention': extract_attention(packet),
+                        'meditation': extract_attention(packet)
                     })
 
     except KeyboardInterrupt:
