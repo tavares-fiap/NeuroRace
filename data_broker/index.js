@@ -1,29 +1,26 @@
-const express = require('express');
-const http = require('http');
-const socketIO = require('socket.io');
+const io = require('socket.io')(3000, {
+    cors: {
+    origin: "*",          // libera todas as origens (ou pode restringir para "http://localhost:8000")
+    methods: ["GET", "POST"]
+  }
+});  // abre WS em 3000
+console.log("Broker conectado, aguardando conexao...")
+io.on('connection', socket => {
+  console.log('Cliente conectado:', socket.id);
+  const forward = (event) => (payload) => {
+    console.log(`[${event}] recebido:`, payload);
+    socket.broadcast.emit(event, payload);
+  };
+  socket.on('blink',   forward('blink'));
+  socket.on('eSense',  forward('eSense'));
+  // teste
+ 
+  socket.on('raceStarted', forward('raceStarted'));
+  socket.on('hasFinished',  forward('hasFinished'));
 
-const app = express();
-const server = http.createServer(app);
-const io = socketIO(server);
-
-app.use(express.static('public'));
-
-io.on('connection', (socket) => {
-  console.log('Cliente conectado ao broker:', socket.id);
-
-  socket.on('attention', (data) => {
-    console.log("\n--- Attention recebido do acquisition.py ---");
-    console.log(data);
-
-    // Reenvia o dado para todos os dashboards conectados
-    io.emit('attention', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('Cliente desconectado:', socket.id);
-  });
-});
-
-server.listen(3000, () => {
-  console.log('Broker + Dashboard rodando na porta 3000');
+  // socket.on('attention', data => {
+  //   console.log("\n=-=-=-=-received data=-=-=-=-")
+  //   console.log(data)
+  //   socket.broadcast.emit('attention', data);
+  // });
 });

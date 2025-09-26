@@ -1,0 +1,27 @@
+{
+    "race_summary": {
+        "winner_by_attention": "player_1",
+        "winner_by_meditation": "player_1",
+        "most_consistent_player_attention": "player_2"
+    },
+    "player_1_stats": {
+        "attention_avg": 51.61,
+        "meditation_avg": 51.29,
+        "attention_peak": 100,
+        "meditation_peak": 99,
+        "attention_consistency": 31.34,
+        "meditation_consistency": 28.84,
+        "total_blinks": 0,
+        "signal_quality_ok_percentage": 100.0
+    },
+    "player_2_stats": {
+        "attention_avg": 48.93,
+        "meditation_avg": 46.04,
+        "attention_peak": 97,
+        "meditation_peak": 86,
+        "attention_consistency": 28.56,
+        "meditation_consistency": 23.31,
+        "total_blinks": 0,
+        "signal_quality_ok_percentage": 100.0
+    }
+}

@@ -1,0 +1,122 @@
+<!-- 
+ * File: index.html
+ * Description: Dashboard principal do projeto NeuroRace para visualização em tempo real 
+ * das métricas de atenção cerebral, pontuação, distância percorrida e ranking dos jogadores.
+ * Interface gamificada com tema dark mode e cores neon da identidade visual.
+ * 
+ * Responsabilidades:
+ * - Exibir métricas principais em cards destacados
+ * - Mostrar gráficos de atenção em tempo real
+ * - Apresentar ranking de jogadores
+ * - Visualizar histórico de performance
+ * - Conectar com WebSocket para dados em tempo real
+ * - Consumir API REST para dados históricos
+ * 
+ * Author: Ester Silva
+ * Created on: 02-09-2025
+ * 
+ * Version: 1.0.0
+ * Squad: Neurorace
+ -->
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuroRace Dashboard</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        rel="stylesheet"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="logo-container">
+            <div class="brain-logo">🧠</div>
+            <h1 class="logo-text">NEURO<span class="highlight">RACE</span></h1>
+        </div>
+        <div class="session-info">
+            <div class="session-timer">
+                <i class="fas fa-clock"></i>
+                <span id="sessionTime">00:00:00</span>
+            </div>
+            <div class="connection-status" id="connectionStatus">
+                <i class="fas fa-wifi"></i>
+                <span>Conectado</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+  <!-- Players Side by Side -->
+<section class="players-status">
+  <div class="player-card player1">
+  <h2>Player 1</h2>
+  <p>Status: <span id="status-player1">Aguardando...</span> 
+     (<span id="signal-player1">-</span>)
+  </p>
+    <div class="metric-card attention-card">
+      <div class="card-header">
+        <i class="fas fa-brain"></i>
+        <h3>Atenção Média</h3>
+      </div>
+      <div class="metric-value">
+        <span id="avgAttention1">0</span><span class="unit">%</span>
+      </div>
+    </div>
+    <div class="metric-card peak-card">
+      <div class="card-header">
+        <i class="fas fa-mountain"></i>
+        <h3>Pico Máximo</h3>
+      </div>
+      <div class="metric-value">
+        <span id="peakAttention1">0</span><span class="unit">%</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="player-card player2">
+      <h2>Player 2</h2>
+  <p>Status: <span id="status-player2">Aguardando...</span> 
+     (<span id="signal-player2">-</span>)
+  </p>
+    <div class="metric-card attention-card">
+      <div class="card-header">
+        <i class="fas fa-brain"></i>
+        <h3>Atenção Média</h3>
+      </div>
+      <div class="metric-value">
+        <span id="avgAttention2">0</span><span class="unit">%</span>
+      </div>
+    </div>
+    <div class="metric-card peak-card">
+      <div class="card-header">
+        <i class="fas fa-mountain"></i>
+        <h3>Pico Máximo</h3>
+      </div>
+      <div class="metric-value">
+        <span id="peakAttention2">0</span><span class="unit">%</span>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- Shared Chart -->
+  <section class="attention-chart">
+    <h2>Gráfico de Atenção em Tempo Real</h2>
+    <div class="realtime-chart-container">
+      <canvas id="realtimeChart"></canvas>
+    </div>
+  </section>
+</main>
+
+
+    <script src="charts.js"></script>
+    <script src="dashboard.js"></script>
+
+</body>
+</html>
