@@ -1,5 +1,7 @@
 import os, socket, json
 import socketio
+import time
+
 
 SOURCE = os.getenv("EEG_SOURCE", "sim")
 PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
@@ -60,7 +62,8 @@ def start_acquisition_service():
                     # blinkStrength = packet.get('blinkStrength', 0)
                     sio.emit('blink', {
                         'player': PLAYER_ID,
-                        'blink': packet['blinkStrength']
+                        'blink': packet['blinkStrength'],
+                        'timeStamp': int(time.time() * 1000)
                     })
                 if 'eSense' in packet and packet.get('poorSignalLevel', 200) <= POOR_SIGNAL_LEVEL_THRESHOLD:
                     # att_smooth = filter_attention(packet)
@@ -76,6 +79,7 @@ def start_acquisition_service():
                         'attention': packet['eSense']['attention'],
                         'meditation': packet['eSense']['meditation'],
                         # 'blink': packet['blinkStrength']
+                        'timeStamp': int(time.time() * 1000)
                     })
                     # else:
                         # sio.emit('eSense', {
