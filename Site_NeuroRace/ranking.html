@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking - NeuroRace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+    <header class="site-header">
+        <div class="main-wrapper header-container">
+            <a href="index.html" class="logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+
+            <div class="desktop-nav">
+                <nav class="site-nav">
+                    <a href="index.html">Início</a>
+                    <a href="sobre.html">O Projeto</a>
+                    <a href="ciencia.html">A Ciência</a>
+                    <a href="equipe.html">Equipe</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+                </div>
+            </div>
+
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir menu">
+                <i class="fas fa-brain"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu">
+            <a href="index.html" class="logo-link mobile-logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+            <button id="close-btn" class="close-btn" aria-label="Fechar menu">&times;</button>
+            <nav class="mobile-site-nav">
+                <a href="index.html">Início</a>
+                <a href="sobre.html">O Projeto</a>
+                <a href="ciencia.html">A Ciência</a>
+                <a href="equipe.html">Equipe</a>
+                <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="main-wrapper">
+            <h1 class="page-title">Ranking Geral</h1>
+            <p class="page-subtitle">Veja os corredores mais focados do evento em tempo real.</p>
+            
+            <div class="ranking-dashboard">
+                <ol class="ranking-list">
+                    <li class="rank-item">
+                        <span class="rank-position">1 <i class="fas fa-crown"></i></span>
+                        <div class="player-details">
+                            <span class="rank-name">Ester Silva</span>
+                            <span class="rank-stat">Atenção Média: 92%</span>
+                        </div>
+                        <span class="rank-score">15,420 PTS</span>
+                    </li>
+                    <li class="rank-item">
+                        <span class="rank-position">2</span>
+                        <div class="player-details">
+                            <span class="rank-name">Nikolas Santos</span>
+                            <span class="rank-stat">Atenção Média: 89%</span>
+                        </div>
+                        <span class="rank-score">14,980 PTS</span>
+                    </li>
+                    <li class="rank-item">
+                        <span class="rank-position">3</span>
+                        <div class="player-details">
+                            <span class="rank-name">Thiago Oliveira</span>
+                            <span class="rank-stat">Atenção Média: 88%</span>
+                        </div>
+                        <span class="rank-score">14,550 PTS</span>
+                    </li>
+                    <li class="rank-item">
+                        <span class="rank-position">4</span>
+                        <div class="player-details">
+                            <span class="rank-name">João Victor</span>
+                            <span class="rank-stat">Atenção Média: 85%</span>
+                        </div>
+                        <span class="rank-score">13,910 PTS</span>
+                    </li>
+                    <li class="rank-item">
+                        <span class="rank-position">5</span>
+                        <div class="player-details">
+                            <span class="rank-name">Pedro Henrique</span>
+                            <span class="rank-stat">Atenção Média: 83%</span>
+                        </div>
+                        <span class="rank-score">13,240 PTS</span>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="main-wrapper">
+            <p>&copy; 2025 NeuroRace - Todos os direitos reservados.</p>
+            <p>Um projeto de Iniciação Científica da FIAP Future Makers.</p>
+        </div>
+    </footer>
+    
+    <script src="main.js"></script>
+</body>
+</html>

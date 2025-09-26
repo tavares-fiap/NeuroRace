@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciando Corrida - NeuroRace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+    <header class="site-header">
+        <div class="main-wrapper header-container">
+            <a href="index.html" class="logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+            <div class="desktop-nav">
+                <nav class="site-nav">
+                    <a href="index.html">Início</a>
+                    <a href="sobre.html">O Projeto</a>
+                    <a href="ciencia.html">A Ciência</a>
+                    <a href="equipe.html">Equipe</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+                </div>
+            </div>
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir menu">
+                <i class="fas fa-brain"></i>
+            </button>
+        </div>
+        <div id="mobile-menu" class="mobile-menu">
+            <button id="close-btn" class="close-btn" aria-label="Fechar menu">&times;</button>
+            <a href="index.html">
+                <img src="assets/images/logo-neurorace-completo.png" alt="Logo NeuroRace Completo" class="mobile-menu-logo">
+            </a>
+            <nav class="mobile-site-nav">
+                <a href="index.html">Início</a>
+                <a href="sobre.html">O Projeto</a>
+                <a href="ciencia.html">A Ciência</a>
+                <a href="equipe.html">Equipe</a>
+                <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="main-wrapper">
+            <h1 class="page-title">Iniciando Corrida</h1>
+            <p class="page-subtitle">Aguarde enquanto preparamos tudo para o desafio.</p>
+
+            <div class="loading-container content-block">
+                <div class="player-names">
+                    <span class="player1-name">Jogador 1</span>
+                    <span class="vs-text">VS</span>
+                    <span class="player2-name">Jogador 2</span>
+                </div>
+                <ul class="status-checklist">
+                    <li data-status="pending">Conectando ao dispositivo do Jogador 1...</li>
+                    <li data-status="pending">Conectando ao dispositivo do Jogador 2...</li>
+                    <li data-status="pending">Calibrando sensores de EEG...</li>
+                    <li data-status="pending">Carregando pista virtual...</li>
+                </ul>
+                <p class="final-status" id="final-status">Aguardando sincronização...</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="main-wrapper">
+            <p>&copy; 2025 NeuroRace - Todos os direitos reservados.</p>
+            <p>Um projeto de Iniciação Científica da FIAP Future Makers.</p>
+        </div>
+    </footer>
+    
+    <script src="main.js"></script>
+    <script src="js/iniciando-corrida.js"></script>
+</body>
+</html>

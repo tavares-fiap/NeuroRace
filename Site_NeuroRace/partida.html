@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Partida - NeuroRace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+    <header class="site-header">
+        <div class="main-wrapper header-container">
+            <a href="index.html" class="logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+
+            <div class="desktop-nav">
+                <nav class="site-nav">
+                    <a href="index.html">Início</a>
+                    <a href="sobre.html">O Projeto</a>
+                    <a href="ciencia.html">A Ciência</a>
+                    <a href="equipe.html">Equipe</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+                </div>
+            </div>
+
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir menu">
+                <i class="fas fa-brain"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="mobile-menu">
+            <a href="index.html" class="logo-link mobile-logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+            <button id="close-btn" class="close-btn" aria-label="Fechar menu">&times;</button>
+            <nav class="mobile-site-nav">
+                <a href="index.html">Início</a>
+                <a href="sobre.html">O Projeto</a>
+                <a href="ciencia.html">A Ciência</a>
+                <a href="equipe.html">Equipe</a>
+                <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="main-wrapper">
+            <h1 class="page-title">Solicite um Desafio em Dupla</h1>
+            <p class="page-subtitle">Insiram seus números de telefone cadastrados para carregar os perfis.</p>
+            
+            <div class="form-container">
+                <div class="players-form">
+                    <div class="player-card">
+                        <h2>Jogador 1</h2>
+                        <div class="form-group">
+                            <label for="p1-phone">Telefone Cadastrado</label>
+                            <input type="tel" id="p1-phone" placeholder="(11) 99999-9999" required>
+                        </div>
+                    </div>
+                    <div class="player-card">
+                        <h2>Jogador 2</h2>
+                        <div class="form-group">
+                            <label for="p2-phone">Telefone Cadastrado</label>
+                            <input type="tel" id="p2-phone" placeholder="(11) 99999-9999" required>
+                        </div>
+                    </div>
+                </div>
+                <button id="start-race-btn" class="cta-button">Iniciar Corrida</button>
+                <div class="status-message" id="status-message"></div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="main-wrapper">
+            <p>&copy; 2025 NeuroRace - Todos os direitos reservados.</p>
+            <p>Um projeto de Iniciação Científica da FIAP Future Makers.</p>
+        </div>
+    </footer>
+    
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    
+    <script src="firebase-config.js"></script>
+    <script src="validation.js"></script>
+
+    <script src="app.js"></script>
+    <script src="main.js"></script>
+
+    <script src="js/partida.js"></script>
+</body>
+</html>
+</body>
+</html>

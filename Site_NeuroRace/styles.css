@@ -1,0 +1,646 @@
+/* --- GERAL E VARIÁVEIS --- */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Orbitron:wght@500;700&display=swap');
+
+:root {
+    --bg-color: #0f0c29;
+    --header-bg: rgba(16, 12, 41, 0.8);
+    --card-bg: #1a1a2e;
+    --text-color: #e0e0e0;
+    --highlight-color: #ffffff;
+    --border-color: #4a4a68;
+    --neon-cyan: #00d4ff;
+    --neon-pink: #ff00c8;
+    --yellow-gold: #ffd700;
+    --font-primary: 'Roboto', sans-serif;
+    --font-display: 'Orbitron', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-primary);
+    line-height: 1.6;
+}
+
+.main-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- CABEÇALHO E NAVEGAÇÃO --- */
+.site-header {
+    background-color: var(--header-bg);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-link {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-logo-img {
+    width: 40px;
+    height: auto;
+}
+
+.logo-text {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.logo-neuro {
+    color: var(--neon-cyan);
+}
+
+.logo-race {
+    color: var(--yellow-gold);
+}
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+}
+
+.site-nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    margin: 0 15px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.site-nav a:hover,
+.site-nav a.active {
+    color: var(--neon-cyan);
+}
+
+.header-actions .cta-nav-button {
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    color: var(--highlight-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+}
+
+.header-actions .cta-nav-button:hover {
+    transform: scale(1.05);
+}
+
+/* --- MENU LATERAL (MOBILE) --- */
+.hamburger-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--neon-cyan);
+    font-size: 1.8rem;
+    cursor: pointer;
+}
+
+.mobile-menu {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 300px;
+    height: 100vh;
+    background-color: var(--card-bg);
+    z-index: 2000;
+    border-left: 1px solid var(--border-color);
+    box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5rem 2rem 2rem 2rem;
+    transition: right 0.4s ease-in-out;
+    overflow-y: auto;
+}
+
+.mobile-menu.active {
+    right: 0;
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--highlight-color);
+    font-size: 2.5rem;
+    cursor: pointer;
+}
+
+.mobile-menu-logo {
+    max-width: 100%;
+    margin-bottom: 3rem;
+}
+
+.mobile-site-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.mobile-site-nav a {
+    color: var(--highlight-color);
+    text-decoration: none;
+    font-family: var(--font-primary);
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 1rem 0;
+    padding: 1rem;
+    width: 100%;
+    text-align: center;
+}
+
+.mobile-menu .cta-nav-button {
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.mobile-site-nav a:not(.cta-nav-button) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* --- CONTEÚDO PRINCIPAL --- */
+.main-content {
+    padding: 4rem 0;
+}
+
+.page-title {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.page-subtitle {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+
+/* --- SEÇÃO HERO (PÁGINA INICIAL) --- */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.hero-text {
+    width: 100%;
+}
+
+.hero-pre-logo-text {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.header-logo {
+    display: block;
+    margin: 1.5rem auto;
+    max-width: 400px;
+}
+
+.cta-button {
+    display: inline-block;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+    color: var(--highlight-color);
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.cta-button:hover,
+.cta-button:focus {
+    transform: scale(1.05);
+    outline: 2px solid var(--neon-cyan);
+    outline-offset: 2px;
+}
+
+/* --- CARDS E BLOCOS DE CONTEÚDO --- */
+.content-block {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.content-block h2 {
+    font-family: var(--font-display);
+    color: var(--neon-cyan);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.inner-card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.inner-card {
+    background: var(--bg-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 3px solid var(--neon-pink);
+}
+
+.inner-card h3 {
+    color: var(--highlight-color);
+    margin-bottom: 0.5rem;
+}
+
+/* --- FORMULÁRIOS (CADASTRO, PARTIDA) --- */
+.form-container, .access-form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.form-container {
+    text-align: center;
+}
+
+.access-form-container .content-block {
+    border: 1px solid var(--yellow-gold);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="tel"] {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="tel"]:focus {
+    outline: none;
+    border-color: var(--neon-cyan);
+}
+
+.privacy-notice {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #aaa;
+    margin-bottom: 1.5rem;
+}
+
+.form-button-container {
+    text-align: center;
+}
+
+.players-form {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.player-card {
+    flex: 1;
+}
+
+.player-card:nth-child(1) {
+    border-color: var(--neon-cyan);
+}
+
+.player-card:nth-child(2) {
+    border-color: var(--neon-pink);
+}
+
+/* --- PÁGINA DE RESULTADOS (RACE FINISHED) --- */
+.results-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.result-card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+.result-card h2 {
+    font-family: var(--font-display);
+    color: var(--highlight-color);
+    margin-bottom: 1.5rem;
+}
+
+.result-card p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.qrcode {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.result-card.player1 {
+    border-top: 4px solid var(--neon-cyan);
+}
+
+.result-card.player2 {
+    border-top: 4px solid var(--neon-pink);
+}
+
+/* --- PÁGINA DE EQUIPE --- */
+.team-grid, .team-grid-mentor {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    text-align: center;
+}
+
+.team-grid-mentor {
+    max-width: 240px;
+    margin: 0 auto;
+}
+
+.team-card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px var(--neon-cyan);
+}
+
+.team-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--neon-cyan);
+    margin-bottom: 1rem;
+}
+
+.team-card h3 {
+    color: var(--highlight-color);
+    margin-bottom: 0.25rem;
+}
+
+.social-links a {
+    color: var(--neon-cyan);
+    font-size: 1.5rem;
+    margin: 0 0.5rem;
+}
+
+/* --- PÁGINA DE RANKING --- */
+.ranking-dashboard {
+    max-width: 800px;
+    margin: 2rem auto;
+}
+
+.ranking-list {
+    list-style: none;
+    padding: 0;
+}
+
+.rank-item {
+    background-color: var(--card-bg);
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-left: 4px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.rank-item:nth-child(1) { border-left-color: var(--yellow-gold); }
+.rank-item:nth-child(2) { border-left-color: #c0c0c0; }
+.rank-item:nth-child(3) { border-left-color: #cd7f32; }
+
+.rank-item:hover {
+    border-left-color: var(--neon-cyan);
+}
+
+.rank-position {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    color: var(--highlight-color);
+    min-width: 50px;
+}
+
+.rank-position .fa-crown {
+    color: var(--yellow-gold);
+}
+
+.player-details {
+    flex-grow: 1;
+    margin: 0 1rem;
+    text-align: left;
+}
+
+.rank-name {
+    display: block;
+    font-weight: bold;
+    color: var(--highlight-color);
+}
+
+.rank-stat {
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.rank-score {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--neon-cyan);
+}
+
+/* --- RODAPÉ --- */
+.site-footer {
+    background-color: var(--card-bg);
+    padding: 2rem 0;
+    margin-top: 4rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 768px) {
+    .desktop-nav {
+        display: none;
+    }
+
+    .hamburger-btn {
+        display: block;
+    }
+
+    .players-form {
+        flex-direction: column;
+    }
+}
+
+/* --- ESTILO DOS CARDS DE JOGADOR (PÁGINA PARTIDA) --- */
+.player-card {
+    padding: 1.5rem;
+    border: 1px solid var(--border-color); /* Adiciona a borda padrão */
+    border-radius: 8px;
+}
+.player-card h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: var(--highlight-color);
+}
+
+.player-card:nth-child(1) {
+    border-color: var(--neon-cyan);
+}
+
+.player-card:nth-child(2) {
+    border-color: var(--neon-pink);
+}
+
+/* --- ESTILOS PARA A PÁGINA DE RESULTADOS (RACE FINISHED) --- */
+
+/* Container que agrupa os cards de resultado em um grid */
+.results-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+/* Estilo individual para cada card de jogador */
+.result-card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+    border: 1px solid var(--border-color);
+}
+
+/* Título com o nome do jogador, usando a fonte display */
+.result-card h2 {
+    font-family: var(--font-display);
+    color: var(--highlight-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+/* Parágrafo da pontuação */
+.result-card p {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Container para o QR Code, com fundo branco para leitura */
+.qrcode {
+    width: 150px;
+    height: 150px;
+    margin: 1.5rem auto 0 auto; /* Centraliza e dá espaço */
+    background-color: white;
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Borda colorida no topo para o Jogador 1 */
+.result-card.player1 {
+    border-top: 4px solid var(--neon-cyan);
+}
+
+/* Borda colorida no topo para o Jogador 2 */
+.result-card.player2 {
+    border-top: 4px solid var(--neon-pink);
+}
+
+/* --- ESTILO UNIFICADO PARA MENSAGENS DE ERRO NO FORMULÁRIO --- */
+.error-message {
+    font-size: 0.9rem; 
+    text-align: center; 
+    display: block;
+    width: 100%;
+    color: var(--neon-pink); 
+    opacity: 0.8; 
+}
+
+.form-group {
+    text-align: left;
+}

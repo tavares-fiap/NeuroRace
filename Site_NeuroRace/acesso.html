@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso - NeuroRace</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+</head>
+<body>
+    <header class="site-header">
+        <div class="main-wrapper header-container">
+            <a href="index.html" class="logo-link">
+                <img src="assets/images/logo-neurorace.png" alt="Logo NeuroRace" class="header-logo-img">
+                <span class="logo-text">
+                    <span class="logo-neuro">NEURO</span><span class="logo-race">RACE</span>
+                </span>
+            </a>
+            <div class="desktop-nav">
+                <nav class="site-nav">
+                    <a href="index.html">Início</a>
+                    <a href="sobre.html">O Projeto</a>
+                    <a href="ciencia.html">A Ciência</a>
+                    <a href="equipe.html">Equipe</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+                </div>
+            </div>
+            <button id="hamburger-btn" class="hamburger-btn" aria-label="Abrir menu">
+                <i class="fas fa-brain"></i>
+            </button>
+        </div>
+    
+        <div id="mobile-menu" class="mobile-menu">
+            <button id="close-btn" class="close-btn" aria-label="Fechar menu">&times;</button>
+            
+            <a href="index.html">
+                <img src="assets/images/logo-neurorace-completo.png" alt="Logo NeuroRace Completo" class="mobile-menu-logo">
+            </a>
+            
+            <nav class="mobile-site-nav">
+                <a href="index.html">Início</a>
+                <a href="sobre.html">O Projeto</a>
+                <a href="ciencia.html">A Ciência</a>
+                <a href="equipe.html">Equipe</a>
+                <a href="acesso.html" class="cta-nav-button">Entrar / Cadastrar</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="main-wrapper">
+            <h1 class="page-title">Acesso à Plataforma</h1>
+            <p class="page-subtitle">Crie sua conta para salvar seu progresso e competir no ranking.</p>
+            <div class="access-form-container">
+                <div class="content-block">
+                    <h2 class="form-title-centered">Criar Nova Conta</h2>
+                    <form id="register-form" novalidate>
+                        <div class="form-group"><label for="reg-name">Nome Completo</label><input type="text" id="reg-name" required><span class="error-message" id="name-error"></span></div>
+                        <div class="form-group"><label for="reg-phone">Telefone</label><input type="tel" id="reg-phone" placeholder="(11) 99999-9999" required><span class="error-message" id="phone-error"></span></div>
+                        <div class="privacy-notice"><p>🔒 Seus dados são protegidos. Não enviaremos spam.</p></div>
+                        <div class="form-button-container">
+                            <button type="submit" class="cta-button">Cadastrar</button>
+                        </div>
+                        <div class="status-message" id="register-status"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="main-wrapper">
+            <p>&copy; 2025 NeuroRace - Todos os direitos reservados.</p>
+            <p>Um projeto de Iniciação Científica da FIAP Future Makers.</p>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script src="firebase-config.js"></script> 
+    
+    <script src="validation.js"></script>
+    <script src="app.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
