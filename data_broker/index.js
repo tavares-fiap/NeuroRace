@@ -17,10 +17,12 @@ io.on('connection', (socket) => {
     console.log('\n=-=-=-=- attention recebido =-=-=-=-');
     console.log(data);
     // Reenvia para TODOS (inclui quem enviou)
-    io.emit('attention', {
+    io.emit('eSense', {
       player: data?.player ?? 'unknown',
       attention: Number(data?.attention) ?? 0,
-      timestamp: data?.timestamp ?? Date.now()
+      timestamp: data?.timestamp ?? Date.now(),
+      poorSignalLevel: 123,
+      status: "no-signal"
     });
   });
 

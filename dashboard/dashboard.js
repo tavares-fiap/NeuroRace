@@ -1,7 +1,7 @@
 /*
  * File: dashboard.js
- * Description: Lógica principal do dashboard NeuroRace (Versão adaptada para layout com 2 players lado a lado).
- * Atualiza os status, atenção média, pico máximo e gráfico em tempo real de ambos os jogadores.
+ * Description: Lógica principal do dashboard NeuroRace (Versão adaptada para eSense).
+ * Atualiza atenção, status do NeuroSky e nível de sinal para ambos os jogadores.
  */
 
 class DashboardManager {
@@ -30,7 +30,8 @@ class DashboardManager {
             attentionHistory: [],
             peakAttention: 0,
             avgAttention: 0,
-            status: "Aguardando..."
+            status: "unknown",
+            poorSignalLevel: null
         };
     }
 
@@ -43,11 +44,13 @@ class DashboardManager {
             avgAttention1: document.getElementById('avgAttention1'),
             peakAttention1: document.getElementById('peakAttention1'),
             status1: document.getElementById('status-player1'),
+            signal1: document.getElementById('signal-player1'),
 
             // Player 2
             avgAttention2: document.getElementById('avgAttention2'),
             peakAttention2: document.getElementById('peakAttention2'),
-            status2: document.getElementById('status-player2')
+            status2: document.getElementById('status-player2'),
+            signal2: document.getElementById('signal-player2')
         };
     }
 
@@ -67,20 +70,18 @@ class DashboardManager {
             if (this.uiElements.connectionStatus) this.uiElements.connectionStatus.textContent = 'Erro';
         });
 
-        // Dados de atenção recebidos
-        socket.on('attention', (data) => {
-            const { player, attention } = data;
-            if (player && this.players[player]) {
-                this.updatePlayerData(player, attention);
-            }
-        });
+        // Agora recebemos tudo via eSense
+        socket.on('eSense', (data) => {
+            const { player, attention, status, poorSignalLevel } = data;
 
-        // Status vindo do pacote eSense
-        socket.on('status', (data) => {
-            const { player, status } = data;
             if (player && this.players[player]) {
+                // Atualiza atenção
+                this.updatePlayerData(player, attention);
+
+                // Atualiza status e sinal
                 this.players[player].status = status;
-                this.updatePlayerStatus(player, status);
+                this.players[player].poorSignalLevel = poorSignalLevel;
+                this.updatePlayerStatus(player, status, poorSignalLevel);
             }
         });
     }
@@ -108,9 +109,12 @@ class DashboardManager {
         this.chartsManager.updateRealtimeChart(playerId, attentionValue);
     }
 
-    updatePlayerStatus(playerId, status) {
-        const el = document.getElementById(`status-player${playerId}`);
-        if (el) el.textContent = status;
+    updatePlayerStatus(playerId, status, poorSignalLevel) {
+        const statusEl = document.getElementById(`status-player${playerId}`);
+        const signalEl = document.getElementById(`signal-player${playerId}`);
+
+        if (statusEl) statusEl.textContent = status || "unknown";
+        if (signalEl) signalEl.textContent = poorSignalLevel !== null ? poorSignalLevel : "-";
     }
 
     updateSessionTimer() {

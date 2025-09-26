@@ -468,3 +468,8 @@ body {
 .realtime-chart-container {
     height: 270px !important; /* <-- gráfico mais alto */
 }
+
+.player-card p span[id^="signal-player"] {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
