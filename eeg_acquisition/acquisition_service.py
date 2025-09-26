@@ -55,7 +55,9 @@ def start_acquisition_service():
             #     packet = json.loads(raw)
                 print("\n-----received data----")
                 print(packet)
+                # blinkStrength = 0
                 if 'blinkStrength' in packet:
+                    # blinkStrength = packet.get('blinkStrength', 0)
                     sio.emit('blink', {
                         'player': PLAYER_ID,
                         'blink': packet['blinkStrength']
@@ -68,11 +70,21 @@ def start_acquisition_service():
                     #     'player': PLAYER_ID,
                     #     'attention': att_smooth
                     # })
+                    # if 'blinkStrength' in packet:
                     sio.emit('eSense', {
                         'player': PLAYER_ID,
-                        'attention': extract_attention(packet),
-                        'meditation': extract_attention(packet)
+                        'attention': packet['eSense']['attention'],
+                        'meditation': packet['eSense']['meditation'],
+                        # 'blink': packet['blinkStrength']
                     })
+                    # else:
+                        # sio.emit('eSense', {
+                        #     'player': PLAYER_ID,
+                        #     'attention': packet['eSense']['attention'],
+                        #     'meditation': packet['eSense']['meditation'],
+                        #     # 'blink': 0
+                        # })
+
 
     except KeyboardInterrupt:
         print("Encerrando aquisição.")
