@@ -8,8 +8,8 @@ class ChartsManager {
     constructor() {
         this.charts = {};
         this.colors = {
-            player1: '#00FFFF',
-            player2: '#FF1B8D',
+            player1: '#0066FF',
+            player2: '#FF1B1B',
             history: '#FFD700',
             performanceScore: '#39FF14',
             background: '#1A1F3A',

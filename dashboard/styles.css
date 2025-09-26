@@ -417,3 +417,54 @@ body {
     gap: 1rem;
     flex-wrap: wrap;
 }
+
+.players-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.player-card {
+    flex: 1;
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 280px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+}
+
+/* Player 1 - azul */
+.player-card.player1 {
+    border: 3px solid #0066FF;
+    box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+}
+.player-card.player1 h2 {
+    color: #0066FF;
+}
+
+/* Player 2 - vermelho */
+.player-card.player2 {
+    border: 3px solid #FF1B1B;
+    box-shadow: 0 0 20px rgba(255, 27, 27, 0.5);
+}
+.player-card.player2 h2 {
+    color: #FF1B1B;
+}
+
+/* Aumentar destaque do gráfico sem mudar estilo */
+.attention-chart {
+    background: var(--bg-card);
+    border-radius: 16px;
+    border: 2px solid var(--neon-cyan);
+    box-shadow: var(--glow-cyan);
+    padding: 1.5rem;
+    /* min-height: 500px; <-- aumenta altura */
+}
+
+.realtime-chart-container {
+    height: 270px !important; /* <-- gráfico mais alto */
+}

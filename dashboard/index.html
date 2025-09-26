@@ -53,176 +53,66 @@
     </header>
 
     <main class="dashboard-main">
-        <div class="main-player-controls">
-            <h4>Monitorando Jogador:</h4>
-            <div class="player-selector-container">
-                <button class="player-selector active" data-player-id="1">Player 1</button>
-                <button class="player-selector" data-player-id="2">Player 2</button>
-            </div>
-        </div>
-        
-        <section class="metrics-grid">
-            <div class="metric-card attention-card" data-tooltip="Sua média de atenção durante a sessão atual. Mantenha alta para mais velocidade!">
-                <div class="card-header">
-                    <i class="fas fa-brain"></i>
-                    <h3>Atenção Média</h3>
-                </div>
-                <div class="metric-value">
-                    <span id="avgAttention">0</span>
-                    <span class="unit">%</span>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-arrow-up trend-up"></i>
-                    <span>+5% vs última sessão</span>
-                </div>
-            </div>
+  <!-- Players Side by Side -->
+<section class="players-status">
+  <div class="player-card player1">
+    <h2>Player 1</h2>
+    <p>Status: <span id="status-player1">Aguardando...</span></p>
+    <div class="metric-card attention-card">
+      <div class="card-header">
+        <i class="fas fa-brain"></i>
+        <h3>Atenção Média</h3>
+      </div>
+      <div class="metric-value">
+        <span id="avgAttention1">0</span><span class="unit">%</span>
+      </div>
+    </div>
+    <div class="metric-card peak-card">
+      <div class="card-header">
+        <i class="fas fa-mountain"></i>
+        <h3>Pico Máximo</h3>
+      </div>
+      <div class="metric-value">
+        <span id="peakAttention1">0</span><span class="unit">%</span>
+      </div>
+    </div>
+  </div>
 
-            <div class="metric-card score-card" data-tooltip="Pontos acumulados baseados na sua performance e nível de atenção contínuo.">
-                <div class="card-header">
-                    <i class="fas fa-trophy"></i>
-                    <h3>Pontuação</h3>
-                </div>
-                <div class="metric-value">
-                    <span id="gameScore">0</span>
-                    <span class="unit">pts</span>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-fire"></i>
-                    <span>Streak: <span id="streak">0</span></span>
-                </div>
-            </div>
+  <div class="player-card player2">
+    <h2>Player 2</h2>
+    <p>Status: <span id="status-player2">Aguardando...</span></p>
+    <div class="metric-card attention-card">
+      <div class="card-header">
+        <i class="fas fa-brain"></i>
+        <h3>Atenção Média</h3>
+      </div>
+      <div class="metric-value">
+        <span id="avgAttention2">0</span><span class="unit">%</span>
+      </div>
+    </div>
+    <div class="metric-card peak-card">
+      <div class="card-header">
+        <i class="fas fa-mountain"></i>
+        <h3>Pico Máximo</h3>
+      </div>
+      <div class="metric-value">
+        <span id="peakAttention2">0</span><span class="unit">%</span>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- Shared Chart -->
+  <section class="attention-chart">
+    <h2>Gráfico de Atenção em Tempo Real</h2>
+    <div class="realtime-chart-container">
+      <canvas id="realtimeChart"></canvas>
+    </div>
+  </section>
+</main>
 
-            <div class="metric-card distance-card" data-tooltip="Distância total percorrida na corrida, impulsionada pela sua concentração.">
-                <div class="card-header">
-                    <i class="fas fa-route"></i>
-                    <h3>Distância</h3>
-                </div>
-                <div class="metric-value">
-                    <span id="totalDistance">0</span>
-                    <span class="unit">m</span>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-running"></i>
-                    <span>Velocidade: <span id="currentSpeed">0</span> m/s</span>
-                </div>
-            </div>
-
-            <div class="metric-card peak-card" data-tooltip="Seu maior pico de atenção já registrado nesta sessão. Supere seus limites!">
-                <div class="card-header">
-                    <i class="fas fa-mountain"></i>
-                    <h3>Pico Máximo</h3>
-                </div>
-                <div class="metric-value">
-                    <span id="peakAttention">0</span>
-                    <span class="unit">%</span>
-                </div>
-                <div class="metric-trend">
-                    <i class="fas fa-medal"></i>
-                    <span>Recorde pessoal</span>
-                </div>
-            </div>
-        </section>
-
-        <section class="attention-monitor">
-            <div class="monitor-header">
-                <h2>Monitor de Atenção em Tempo Real (Player 1 x Player 2)</h2>
-                <!-- <div class="player-selector-container">
-                    <button class="player-selector active" data-player-id="1">Player 1</button>
-                    <button class="player-selector" data-player-id="2">Player 2</button>
-                </div> -->
-
-                <div class="attention-zone" id="attentionZone">
-                    <span class="zone-indicator">ZONA NEUTRA</span>
-                </div>
-            </div>
-            
-            <div class="brain-energy-container">
-                <div class="brain-energy-label">Energia Cerebral</div>
-                <div class="brain-energy-bar">
-                    <div class="energy-fill" id="energyFill"></div>
-                    <div class="energy-pulse" id="energyPulse"></div>
-                </div>
-                <div class="energy-percentage" id="energyPercentage">0%</div>
-            </div>
-
-            <div class="realtime-chart-container">
-                <canvas id="realtimeChart"></canvas>
-            </div>
-        </section>
-
-        <section class="charts-section">
-            <div class="chart-container">
-                <div class="chart-header">
-                    <h3>Histórico de Atenção</h3>
-                    <div class="chart-controls">
-                        <button class="time-filter active" data-period="1h">1h</button>
-                        <button class="time-filter" data-period="6h">6h</button>
-                        <button class="time-filter" data-period="24h">24h</button>
-                    </div>
-                </div>
-                <canvas id="historyChart"></canvas>
-            </div>
-
-            <div class="ranking-container">
-                <div class="ranking-header">
-                    <h3>Ranking Global</h3>
-                    <div class="ranking-period">Esta semana</div>
-                </div>
-                <div class="ranking-list" id="rankingList">
-                    </div>
-            </div>
-        </section>
-        
-        <section class="performance-evolution-section">
-            <div class="chart-container performance-comparison-container">
-                <div class="chart-header">
-                    <h3>Evolução de Performance (Últimas Sessões)</h3>
-                </div>
-                <canvas id="performanceComparisonChart"></canvas>
-            </div>
-        </section>
-
-
-        <section class="achievements-section">
-            <h3>Conquistas Recentes</h3>
-            <div class="achievements-grid">
-                <div class="achievement-badge earned">
-                    <i class="fas fa-fire"></i>
-                    <div class="badge-info">
-                        <div class="badge-name">Concentração Extrema</div>
-                        <div class="badge-desc">Atenção > 90% por 5 min</div>
-                    </div>
-                </div>
-                
-                <div class="achievement-badge earned">
-                    <i class="fas fa-bolt"></i>
-                    <div class="badge-info">
-                        <div class="badge-name">Velocista Mental</div>
-                        <div class="badge-desc">Velocidade máxima: 15 m/s</div>
-                    </div>
-                </div>
-                
-                <div class="achievement-badge locked">
-                    <i class="fas fa-crown"></i>
-                    <div class="badge-info">
-                        <div class="badge-name">Mestre Neural</div>
-                        <div class="badge-desc">Completar 100 corridas</div>
-                    </div>
-                </div>
-                
-                <div class="achievement-badge locked">
-                    <i class="fas fa-target"></i>
-                    <div class="badge-info">
-                        <div class="badge-name">Precisão Absoluta</div>
-                        <div class="badge-desc">Manter 95% por 10 min</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
 
     <script src="charts.js"></script>
     <script src="dashboard.js"></script>
-    <!-- <script src="websocket.js"></script> -->
+
 </body>
 </html>
