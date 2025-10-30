@@ -17,16 +17,23 @@ POOR_SIGNAL_LEVEL_THRESHOLD = int(os.getenv('POOR_SIGNAL_LEVEL_THRESHOLD', '50')
 
 window = []
 
-def extract_attention(packet):
-    return packet['eSense']['attention']
+def signal_status(psl: int | None, threshold: int) -> str:
+    if psl is None:
+        return "unknown"
+    if psl >= 200:
+        return "no-signal"
+    return "ok" if psl <= threshold else "poor"
 
-def filter_attention(packet):
-    attention_raw = extract_attention(packet)
-    window.append(attention_raw)
-    if len(window) > N_READINGS:
-        window.pop(0)
-    attention_smooth = sum(window)/len(window)
-    return attention_smooth
+# def extract_attention(packet):
+#     return packet['eSense']['attention']
+
+# def filter_attention(packet):
+#     attention_raw = extract_attention(packet)
+#     window.append(attention_raw)
+#     if len(window) > N_READINGS:
+#         window.pop(0)
+#     attention_smooth = sum(window)/len(window)
+#     return attention_smooth
 
 def start_acquisition_service():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -58,14 +65,21 @@ def start_acquisition_service():
                 print("\n-----received data----")
                 print(packet)
                 # blinkStrength = 0
+
+                now_ms = int(time.time() * 1000)
+
                 if 'blinkStrength' in packet:
                     # blinkStrength = packet.get('blinkStrength', 0)
                     sio.emit('blink', {
                         'player': PLAYER_ID,
                         'blink': packet['blinkStrength'],
-                        'timeStamp': int(time.time() * 1000)
+                        # 'poorSignalLevel': psl,
+                        # 'status': status,
+                        'timeStamp': now_ms
                     })
-                if 'eSense' in packet and packet.get('poorSignalLevel', 200) <= POOR_SIGNAL_LEVEL_THRESHOLD:
+                if 'eSense' in packet:
+                    psl = packet.get('poorSignalLevel')
+                    status = signal_status(psl, POOR_SIGNAL_LEVEL_THRESHOLD)
                     # att_smooth = filter_attention(packet)
                     # print("\n-----sent attention=----")
                     # print(att_smooth)
@@ -79,7 +93,9 @@ def start_acquisition_service():
                         'attention': packet['eSense']['attention'],
                         'meditation': packet['eSense']['meditation'],
                         # 'blink': packet['blinkStrength']
-                        'timeStamp': int(time.time() * 1000)
+                        'poorSignalLevel': psl,
+                        'status': status,
+                        'timeStamp': now_ms,
                     })
                     # else:
                         # sio.emit('eSense', {
@@ -88,7 +104,6 @@ def start_acquisition_service():
                         #     'meditation': packet['eSense']['meditation'],
                         #     # 'blink': 0
                         # })
-
 
     except KeyboardInterrupt:
         print("Encerrando aquisição.")

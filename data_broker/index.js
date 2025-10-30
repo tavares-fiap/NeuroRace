@@ -9,6 +9,9 @@ io.on('connection', socket => {
   socket.on('blink',   forward('blink'));
   socket.on('eSense',  forward('eSense'));
 
+  socket.on('raceStarted', forward('raceStarted'));
+  socket.on('hasFinished',  forward('hasFinished'));
+
   // socket.on('attention', data => {
   //   console.log("\n=-=-=-=-received data=-=-=-=-")
   //   console.log(data)

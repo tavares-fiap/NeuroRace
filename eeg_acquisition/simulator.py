@@ -18,11 +18,12 @@ def generate_eeg_power():
 
 def generate_packet():
     return {
-        "poorSignalLevel": random.randint(0, 200),
+        # "poorSignalLevel": random.randint(0, 200),
+        "poorSignalLevel": 0,
         "eSense": {"attention": random.randint(0, 100), "meditation": random.randint(0, 100)},
         "eegPower": generate_eeg_power(),
         "rawEeg": random.randint(-2048, 2047),
-        "blinkStrength": random.choice([0]*9 + [random.randint(50,255)])
+        # "blinkStrength": random.choice([0]*9 + [random.randint(50,255)])
     }
 
 def handle_client(conn, addr):
