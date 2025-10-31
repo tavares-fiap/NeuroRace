@@ -11,24 +11,21 @@ console.log('Broker conectado, aguardando conexões em :3000 ...');
 
 io.on('connection', (socket) => {
   console.log('Cliente conectado:', socket.id);
+  const forward = (event) => (payload) => {
+    console.log(`[${event}] recebido:`, payload);
+    socket.broadcast.emit(event, payload);
+  };
+  socket.on('blink',   forward('blink'));
+  socket.on('eSense',  forward('eSense'));
 
-  // Recebe do acquisition service ou de qualquer cliente
-  socket.on('attention', (data) => {
-    console.log('\n=-=-=-=- attention recebido =-=-=-=-');
-    console.log(data);
-    // Reenvia para TODOS (inclui quem enviou)
-    io.emit('eSense', {
-      player: data?.player ?? 'unknown',
-      attention: Number(data?.attention) ?? 0,
-      timestamp: data?.timestamp ?? Date.now(),
-      poorSignalLevel: 123,
-      status: "no-signal"
-    });
-  });
+  socket.on('raceStarted', forward('raceStarted'));
+  socket.on('hasFinished',  forward('hasFinished'));
 
-  socket.on('disconnect', (reason) => {
-    console.log('Cliente desconectado:', socket.id, 'motivo:', reason);
-  });
+  // socket.on('attention', data => {
+  //   console.log("\n=-=-=-=-received data=-=-=-=-")
+  //   console.log(data)
+  //   socket.broadcast.emit('attention', data);
+  // });
 });
 
 // ====== (OPCIONAL) gerador de teste ======

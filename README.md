@@ -1,19 +1,24 @@
-# Gamifying Concentration with NeuroSky (MVP)
 
-Este projeto apresenta um **MVP ultra-simplificado** para gamificar a concentração de usuários usando dados de EEG simulados — e, no futuro, reais vindos de um headset NeuroSky MindWave Mobile. A ideia é medir o nível de atenção de dois jogadores e, a partir dele, controlar a velocidade de seus personagens em um jogo competitivo.
+
+# NeuroRace — EEG Runner (MVP, Dockerized)
+
+MVP para **gamificar a concentração** usando dados de EEG (simulados por enquanto e, em breve, reais com NeuroSky ThinkGear). Medimos o nível de atenção de **dois jogadores** e usamos esse valor para controlar a velocidade dos personagens em um **jogo runner** (Unreal) em **tela dividida** com obstáculos.
 
 ---
 
-## 🚀 Visão Geral
+## 🧩 Arquitetura (alto nível)
 
-1. **Simulador de EEG** (`eeg_acquisition/simulator.py`): gera dados JSON parecidos com os do NeuroSky e os envia por TCP.
-2. **Serviço de Aquisição** (`eeg_acquisition/acquisition_service.py`): lê o fluxo TCP, filtra e suaviza (_rolling window_), e publica via Socket.IO no Broker.
-3. **Data Broker** (`data_broker/index.js`): serviço Node.js que recebe eventos `attention` e faz broadcast para qualquer cliente conectado (jogo, dashboard, analytics).
+1. **Simulador de EEG** (`eeg_acquisition/simulator.py`)
+   Emula pacotes JSON no formato “ThinkGear-like” via **TCP** (porta configurável), incluindo `eSense.attention`, `eegPower`, `poorSignalLevel`, etc.
 
-> 🔜 **Próximos passos**:  
-> - Implementar o **jogo** (Unity / Unreal/ Phaser / Godot) capaz de receber eventos de atenção e ajustar a velocidade dos personagens.  
-> - Adicionar um **Dashboard** web para monitorar métricas em tempo real e histórico de concentração.  
-> - Substituir o simulador pelo **ThinkGear Connector** e headset NeuroSky real.
+2. **Serviço de Aquisição** (`eeg_acquisition/acquisition_service.py`)
+   Conecta no simulador via TCP, faz **suavização** do `attention` por janela móvel e publica o valor médio via **Socket.IO** para o **Broker**.
+
+3. **Data Broker** (`data_broker/index.js`)
+   Servidor **Socket.IO** em Node.js que recebe eventos `attention` e faz **broadcast** para qualquer cliente (jogo, dashboard, etc.).
+
+> **Status do Jogo (Unreal):** em implementação — runner com **tela dividida**, obstáculos e **recebendo dados simulados** do Broker.
+> **Status do Dashboard:** protótipo em teste (UI sendo definida). Será um projeto separado.
 
 ---
 
@@ -21,144 +26,244 @@ Este projeto apresenta um **MVP ultra-simplificado** para gamificar a concentra�
 
 ```text
 .
+├── docker-compose.yml
 ├── eeg_acquisition/
-│   ├── config.py
+│   ├── acquisition_service.py
 │   ├── simulator.py
-│   └── acquisition_service.py
+│   └── Dockerfile
 └── data_broker/
     ├── index.js
-    └── package.json
-````
-
-* **`eeg_acquisition/`**
-
-  * `config.py` — endereços, portas e constantes de configuração.
-  * `simulator.py` — servidor TCP que emula o NeuroSky.
-  * `acquisition_service.py` — cliente TCP + Socket.IO que filtra e publica atenção.
-
-* **`data_broker/`**
-
-  * `index.js` — servidor Socket.IO que recebe e retransmite eventos.
-  * `package.json` — dependências Node.js (Socket.IO).
+    ├── package.json
+    └── Dockerfile
+```
 
 ---
 
-## 🛠️ Pré-requisitos
+## 🐳 Pré-requisitos (Docker)
 
-* **Python 3.8+**
-* **Node.js 14+** e **npm**
-* (Opcional) **ThinkGear Connector** e headset NeuroSky MindWave Mobile
+* **Docker** e **Docker Compose**
+* Verifique a instalação:
 
----
-
-## ⚙️ Como Rodar o MVP
-
-Abra **três** terminais distintos:
-
-### 1. Subir o Broker (Node.js)
-
-```bash
-cd data_broker
-npm install          # instala socket.io
-node index.js        # inicia em ws://localhost:3000
-```
-
-Você deverá ver:
-
-```
-Broker conectado, aguardando conexao...
-```
-
-### 2. Iniciar o Simulador de EEG
-
-```bash
-cd eeg_acquisition
-python simulator.py
-```
-
-Saída esperada:
-
-```
-TGC Simulator ouvindo em 127.0.0.1:13854
-[+] Conectado em ('127.0.0.1', XXXXX)
-Iniciando stream de dados...
------sent data-----
-{"poorSignalLevel": ...}
-```
-
-### 3. Iniciar o Serviço de Aquisição
-
-Em outro terminal:
-
-```bash
-cd eeg_acquisition
-pip install python-socketio         # instale se ainda não tiver
-pip install "python-socketio[client]"
-python acquisition_service.py
-```
-
-Saída esperada:
-
-```
------received data----
-{ "poorSignalLevel": 0, "eSense": { "attention": 72, ... } }
------sent attention=----
-68.4
-```
-
-> **Obs.** certifique-se de que os valores de `HOST`, `ACQUISITION_PORT` e `BROKER_URL` em `config.py` correspondam ao simulador e ao broker.
+  ```bash
+  docker --version
+  docker compose version   # ou: docker-compose --version
+  ```
 
 ---
 
-## 🔍 Como Testar
+## ⚙️ Subindo tudo com Docker (passo a passo)
 
-1. **Verificar logs** do Broker (`data_broker/index.js`):
+Na raiz do projeto:
 
-   * Sempre que receber um evento, vai imprimir o JSON com `player` e `attention`.
+1. **Build** das imagens
 
-2. **Adicionar um cliente de teste**:
+```bash
+docker compose build
+```
 
-   ```js
-   // test-client.js
-   const io = require('socket.io-client');
-   const socket = io('http://localhost:3000');
-   socket.on('attention', data => {
-     console.log('Evento recebido no cliente de teste:', data);
-   });
+2. **Subir** os serviços em segundo plano
+
+```bash
+docker compose up -d
+```
+
+Isso iniciará:
+
+* `broker` (Node/Socket.IO) em **:3000**
+* `simulator-a` (TCP **:13854**) e `simulator-b` (TCP **:13855**)
+* `acquisition-a` (PLAYER\_ID=1) lendo `simulator-a` e publicando no broker
+* `acquisition-b` (PLAYER\_ID=2) lendo `simulator-b` e publicando no broker
+
+> Subimos **duas instâncias** de simulador e aquisição para **simular dois dispositivos**/jogadores.
+
+---
+
+## 🔍 Acompanhando Logs
+
+* Todos os serviços:
+
+  ```bash
+  docker compose logs -f
+  ```
+
+* Serviço específico (ex.: broker):
+
+  ```bash
+  docker compose logs -f broker
+  ```
+
+* Via **Docker Desktop**: selecione o container e abra a aba de **Logs**.
+
+**O que esperar:**
+
+* `broker` imprimirá eventos `attention` recebidos e rebroadcasts
+* `simulator-*` mostrará pacotes JSON enviados (`-----sent data-----`)
+* `acquisition-*` mostrará pacotes recebidos e o `attention` suavizado emitido (`-----sent attention=----`)
+
+---
+
+## 🧪 Teste rápido do Broker (cliente de exemplo)
+
+Opcional, fora do Docker (requer Node instalado localmente):
+
+```js
+// test-client.js
+const io = require('socket.io-client');
+const socket = io('http://localhost:3000');
+socket.on('connect', () => console.log('Cliente teste conectado'));
+socket.on('attention', (data) => console.log('attention recebido:', data));
+```
+
+```bash
+node test-client.js
+```
+
+Você deverá ver eventos `attention` com `{ player: 1|2, attention: <float> }`.
+
+---
+
+## ⚙️ Variáveis de Ambiente (principais)
+
+**eeg\_acquisition/simulator.py**
+
+* `ACQ_PORT` (default `13854`) — porta TCP do simulador
+* `PACKET_INTERVAL` (default `1.0`) — intervalo entre pacotes (s)
+
+**eeg\_acquisition/acquisition\_service.py**
+
+* `PLAYER_ID` (default `1`) — id do jogador
+* `ACQ_PORT` (default `13854`) — porta do simulador alvo
+* `EEG_HOST` (default `127.0.0.1`) — host do simulador (em Docker usamos `simulator-a`/`simulator-b`)
+* `BROKER_URL` (default `http://broker:3000`) — URL do Socket.IO
+* `N_READINGS` (default `5`) — janela da média móvel do attention
+* `POOR_SIGNAL_LEVEL_THRESHOLD` (default `100`) — ignora pacotes com `poorSignalLevel` acima do limite (no real, tende a `0`)
+
+**data\_broker/index.js**
+
+* Porta **3000** exposta (configurada no código)
+
+> Todas já estão definidas no `docker-compose.yml` para o cenário com 2 jogadores.
+
+---
+
+## 🧯 Troubleshooting (BOs comuns)
+
+Se algo não subir/atualizar corretamente, tente:
+
+```bash
+docker compose down -v
+docker compose build --no-cache
+docker compose up -d
+```
+
+Dicas:
+
+* Verifique conflitos de porta locais (`3000`, `13854`, `13855`)
+* Inspecione os logs do container com erro (`docker compose logs <serviço>`)
+* Em redes corporativas/proxy, valide acesso entre containers (resolução de hostnames `simulator-a`, `broker` etc.)
+
+---
+
+## 🎮 Jogo (Unreal) — Status & Integração
+
+**Status:** em desenvolvimento. O jogo é um **runner** com **tela dividida** e obstáculos. Já **recebe dados simulados** do Broker e ajusta a velocidade dos personagens conforme `attention`.
+
+**Conexão esperada (lado do jogo):** cliente Socket.IO para `ws://<HOST_DO_BROKER>:3000`, escutando o evento:
+
+```json
+{ "player": 1 | 2, "attention": <float> }
+```
+
+> ![Jogo — Tela dividida](./images/game2.gif)
+> *Legenda: Imagens do jogo em desenvolvimento.*
+
+---
+
+## 📊 Dashboard — Status & Demonstrações
+
+**Status:** protótipo em teste (UI/estética em definição) — **não está neste repositório** ainda.
+
+> ![Dashboard — UI A](./images/dashboard1.gif)
+> *Legenda: Prototipo do dashboard*
+
+
+---
+
+## 🔄 Fluxo de Dados (detalhe)
+
+1. `simulator.py` gera pacotes como:
+
+   ```json
+   {
+     "poorSignalLevel": 0..200,
+     "eSense": { "attention": 0..100, "meditation": 0..100 },
+     "eegPower": { "delta": ..., "theta": ..., "lowAlpha": ... },
+     "rawEeg": -2048..2047,
+     "blinkStrength": 0 ou 50..255
+   }
    ```
+2. `acquisition_service.py` lê do TCP, **filtra/suaviza** `attention` (média móvel com `N_READINGS`) e emite via Socket.IO:
 
-   ```bash
-   node test-client.js
+   ```json
+   { "player": 1|2, "attention": <float> }
    ```
-
-3. **Substituir o simulador**: quando o ThinkGear Connector e o headset estiverem prontos, basta:
-
-   * Remover o simulador ou desligar `simulator.py`.
-   * No `acquisition_service.py`, implementar a conexão ao TGC real lendo do socket TCP 13854 após o handshake.
-   * Ajustar `POOR_SIGNAL_LEVEL_THRESHOLD = 0` em `config.py`.
+3. `data_broker/index.js` rebroadcasta `attention` para todos os clientes conectados.
 
 ---
 
-## 🎮 Próximos Passos
+## 🧪 Rodar componentes sem Docker (opcional, dev)
 
-* **Módulo de Jogo**:
+> Recomendamos Docker para reproducibilidade.
 
-  * Conectar-se via Socket.IO e mover sprites/personagens conforme `attention`.
-  * Implementar lógica de competição e linha de chegada.
+* **Broker**
 
-* **Dashboard e Analytics**:
+  ```bash
+  cd data_broker
+  npm install
+  node index.js   # ws://localhost:3000
+  ```
 
-  * Serviço dedicado para armazenar dados em série temporal (InfluxDB / TimescaleDB).
-  * Frontend React para visualizar gráficos em tempo real e históricos.
+* **Simulador**
 
-* **Integração Completa**:
+  ```bash
+  cd eeg_acquisition
+  python simulator.py
+  ```
 
-  * Calibração inicial do NeuroSky (baseline de atenção).
-  * Tratamento de artefatos (piscadas, movimento).
-  * Autenticação e configuração de múltiplos jogadores.
+* **Aquisição**
+
+  ```bash
+  cd eeg_acquisition
+  pip install "python-socketio[client]"
+  python acquisition_service.py
+  ```
+
+Ajuste `EEG_HOST`, `ACQ_PORT` e `BROKER_URL` conforme seu ambiente.
+
+---
+
+## 🗺️ Roadmap / Próximos Passos
+
+* **Jogo (Unreal)**
+
+  * Finalizar assets (sprites), HUD, **progress bar**, feedback visual e polimento de UI/UX.
+  * Parametrizar aceleração/atrito por `attention`, calibrar curvas.
+
+* **Dashboard**
+
+  * Fechar estética, consolidar telas e métricas.
+  * (Futuro) Persistência (ex.: InfluxDB/Timescale) para histórico e análises.
+
+* **NeuroSky Real**
+
+  * Integrar ao **ThinkGear Connector** (socket TCP).
+  * Ajustar `POOR_SIGNAL_LEVEL_THRESHOLD` (próximo de `0` no real).
+  * Calibração de baseline e tratamento de artefatos (piscadas/movimento).
 
 ---
 
 ## 📄 Licença
 
-Este projeto está sob a [MIT License](LICENSE). Sinta-se à vontade para clonar, modificar e contribuir!
+Este projeto está sob a [MIT License](LICENSE).
+
+
