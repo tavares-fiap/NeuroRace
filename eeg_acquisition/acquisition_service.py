@@ -24,9 +24,6 @@ def signal_status(psl: int | None, threshold: int) -> str:
         return "no-signal"
     return "ok" if psl <= threshold else "poor"
 
-# def extract_attention(packet):
-#     return packet['eSense']['attention']
-
 # def filter_attention(packet):
 #     attention_raw = extract_attention(packet)
 #     window.append(attention_raw)
@@ -59,17 +56,12 @@ def start_acquisition_service():
                     packet = json.loads(raw)
                 except json.JSONDecodeError:
                     continue
-            # while '\r' in buffer:
-            #     raw, buffer = buffer.split('\r', 1)
-            #     packet = json.loads(raw)
                 print("\n-----received data----")
                 print(packet)
-                # blinkStrength = 0
 
                 now_ms = int(time.time() * 1000)
 
                 if 'blinkStrength' in packet:
-                    # blinkStrength = packet.get('blinkStrength', 0)
                     sio.emit('blink', {
                         'player': PLAYER_ID,
                         'blink': packet['blinkStrength'],
@@ -87,23 +79,15 @@ def start_acquisition_service():
                     #     'player': PLAYER_ID,
                     #     'attention': att_smooth
                     # })
-                    # if 'blinkStrength' in packet:
                     sio.emit('eSense', {
                         'player': PLAYER_ID,
                         'attention': packet['eSense']['attention'],
                         'meditation': packet['eSense']['meditation'],
-                        # 'blink': packet['blinkStrength']
+                        'eegPower': packet['eegPower'],
                         'poorSignalLevel': psl,
                         'status': status,
                         'timeStamp': now_ms,
                     })
-                    # else:
-                        # sio.emit('eSense', {
-                        #     'player': PLAYER_ID,
-                        #     'attention': packet['eSense']['attention'],
-                        #     'meditation': packet['eSense']['meditation'],
-                        #     # 'blink': 0
-                        # })
 
     except KeyboardInterrupt:
         print("Encerrando aquisição.")

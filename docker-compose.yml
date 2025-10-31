@@ -62,25 +62,25 @@ services:
   #   depends_on:
   #     - broker
 
-  collector_service:
-    build: ./metrics_collector/collector_service
-    environment:
-      BROKER_URL: "http://broker:3000"
-    volumes:
-      - ./metrics_collector/results:/results
-    command: python collector_service.py
-    depends_on:
-      - broker
-  analysis_service:
-    build: ./metrics_collector/analysis_service
-    environment:
-      BROKER_URL: "http://broker:3000"
-    volumes:
-      - ./metrics_collector/results:/results
-    depends_on:
-      - broker
-      - collector_service
+  # collector_service:
+  #   build: ./metrics_collector/collector_service
+  #   environment:
+  #     BROKER_URL: "http://broker:3000"
+  #   volumes:
+  #     - ./metrics_collector/results:/results
+  #   command: python collector_service.py
+  #   depends_on:
+  #     - broker
+  # analysis_service:
+  #   build: ./metrics_collector/analysis_service
+  #   environment:
+  #     BROKER_URL: "http://broker:3000"
+  #   volumes:
+  #     - ./metrics_collector/results:/results
+  #   depends_on:
+  #     - broker
+  #     - collector_service
 
-volumes:
-  db_data:
+# volumes:
+#   db_data:
 
