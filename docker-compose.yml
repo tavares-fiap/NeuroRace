@@ -66,26 +66,41 @@ services:
       - broker
     command: sh -c "sleep 5 && python -u collector.py"
 
-  etl_processor:
-    build: ./data_pipeline/etl_processor
-    environment:
-      RAW_DATA_PATH: "/data/raw_data"
-      TRUSTED_DATA_PATH: "/data/trusted_data"
-    volumes:
-      # Compartilha EXATAMENTE O MESMO volume
-      - ./data_pipeline/data:/data # ATUALIZADO
+  # etl_processor:
+  #   build: ./data_pipeline/etl_processor
+  #   environment:
+  #     RAW_DATA_PATH: "/data/raw_data"
+  #     TRUSTED_DATA_PATH: "/data/trusted_data"
+  #   volumes:
+  #     # Compartilha EXATAMENTE O MESMO volume
+  #     - ./data_pipeline/data:/data # ATUALIZADO
     
-  refined_processor:
-    build: ./data_pipeline/refined_processor
+  # refined_processor:
+  #   build: ./data_pipeline/refined_processor
+  #   environment:
+  #     TRUSTED_DATA_PATH: "/data/trusted_data"
+  #     REFINED_DATA_PATH: "/data/refined_data"
+  #     GOOGLE_APPLICATION_CREDENTIALS: "/app/firebase-credentials.json"
+  #   volumes:
+  #     # Compartilha o mesmo volume novamente
+  #     - ./data_pipeline/data:/data
+  #     - ./data_pipeline/secrets/firebase-credentials.json:/app/firebase-credentials.json
+    
+
+  pipeline_worker:
+    build: ./data_pipeline/pipeline_worker
     environment:
+      BROKER_URL: "http://broker:3000"
+      RAW_DATA_PATH: "/data/raw_data"
       TRUSTED_DATA_PATH: "/data/trusted_data"
       REFINED_DATA_PATH: "/data/refined_data"
       GOOGLE_APPLICATION_CREDENTIALS: "/app/firebase-credentials.json"
     volumes:
-      # Compartilha o mesmo volume novamente
+      # Mapeia a pasta de dados e a de segredos
       - ./data_pipeline/data:/data
       - ./data_pipeline/secrets/firebase-credentials.json:/app/firebase-credentials.json
-    
+    depends_on:
+      - broker
 
   # dashboard:
   #   build: ./dashboard
