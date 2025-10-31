@@ -85,6 +85,29 @@ def on_esense(data):
     except Exception as e:
         print(f"[COLLECTOR] Erro ao salvar dados para o player {player_id}: {e}")
 
+@sio.on('gameEvent')
+def on_game_event(data):
+    """
+    Este handler recebe os eventos do jogo (colisão, etc.) e os salva
+    em um arquivo separado para a sessão atual.
+    """
+    if not current_session_id:
+        return
+    
+    # Valida se o evento pertence à sessão atual
+    if data.get('sessionId') != current_session_id:
+        return
+
+    try:
+        file_name = 'game_events.jsonl'
+        file_path = RAW_DATA_PATH / current_session_id / file_name
+        
+        with open(file_path, 'a') as f:
+            f.write(json.dumps(data) + '\n')
+            
+    except Exception as e:
+        print(f"[COLLECTOR] Erro ao salvar evento de jogo: {e}")
+
 if __name__ == '__main__':
     # Garante que o diretório base exista
     RAW_DATA_PATH.mkdir(parents=True, exist_ok=True)

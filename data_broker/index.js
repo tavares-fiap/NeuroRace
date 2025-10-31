@@ -20,6 +20,7 @@ io.on('connection', (socket) => {
 
   socket.on('raceStarted', forward('raceStarted'));
   socket.on('hasFinished',  forward('hasFinished'));
+  socket.on('gameEvent', forward('gameEvent'));
 
   // socket.on('attention', data => {
   //   console.log("\n=-=-=-=-received data=-=-=-=-")
