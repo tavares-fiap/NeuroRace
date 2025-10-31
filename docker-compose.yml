@@ -54,6 +54,18 @@ services:
       - broker
       - simulator-b
 
+  raw_data_collector:
+    build: ./data_pipeline/raw_data_collector
+    environment:
+      BROKER_URL: "http://broker:3000"
+      RAW_DATA_PATH: "/data" # Caminho dentro do container
+    volumes:
+      # Mapeia a pasta local para a pasta DENTRO do container.
+      # Assim, os arquivos salvos pelo container aparecem no seu computador.
+      - ./data_pipeline/raw_data:/data
+    depends_on:
+      - broker
+
 
   # dashboard:
   #   build: ./dashboard
