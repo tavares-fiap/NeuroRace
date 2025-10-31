@@ -90,5 +90,5 @@ if __name__ == '__main__':
     RAW_DATA_PATH.mkdir(parents=True, exist_ok=True)
     
     # Inicia a conexão com o broker e espera por eventos
-    sio.connect(BROKER_URL, waits=True, wait_timeout=10, transports='websocket')
+    sio.connect(BROKER_URL, wait=True, wait_timeout=10, transports='websocket')
     sio.wait()
