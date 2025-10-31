@@ -75,6 +75,15 @@ services:
       # Compartilha EXATAMENTE O MESMO volume
       - ./data_pipeline/data:/data # ATUALIZADO
     
+  refined_processor:
+    build: ./data_pipeline/refined_processor
+    environment:
+      TRUSTED_DATA_PATH: "/data/trusted_data"
+      REFINED_DATA_PATH: "/data/refined_data"
+    volumes:
+      # Compartilha o mesmo volume novamente
+      - ./data_pipeline/data:/data
+    
 
   # dashboard:
   #   build: ./dashboard
