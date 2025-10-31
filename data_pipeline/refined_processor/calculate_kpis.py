@@ -6,6 +6,9 @@ import numpy as np
 from pathlib import Path
 from datetime import timedelta
 
+import firebase_admin
+from firebase_admin import credentials, firestore
+
 # --- Configuração dos Parâmetros de Análise ---
 TRUSTED_DATA_PATH = Path(os.getenv('TRUSTED_DATA_PATH', '/data/trusted_data'))
 REFINED_DATA_PATH = Path(os.getenv('REFINED_DATA_PATH', '/data/refined_data'))
@@ -164,6 +167,21 @@ def calculate_kpis_for_session(session_id: str):
             json.dump(session_kpis, f, indent=4)
             
         print(f"\n[REFINED] Sumário de KPIs salvo em {output_path}")
+        # --- 4. ENVIAR PARA FIRESTORE ---
+        try:
+            print("[FIREBASE] Autenticando com o Firebase...")
+            # O SDK procura automaticamente pela variável de ambiente GOOGLE_APPLICATION_CREDENTIALS
+            if not firebase_admin._apps: # Evita reinicializar o app
+                cred = credentials.ApplicationDefault()
+                firebase_admin.initialize_app(cred)
+            
+            db = firestore.client()
+            doc_ref = db.collection('sessions').document(session_id)
+            doc_ref.set(session_kpis)
+            print(f"[FIREBASE] Dados da sessão {session_id} salvos com sucesso no Firestore!")
+        except Exception as e:
+            print(f"[FIREBASE] Erro ao salvar dados no Firestore: {e}")
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1:

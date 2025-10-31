@@ -80,9 +80,11 @@ services:
     environment:
       TRUSTED_DATA_PATH: "/data/trusted_data"
       REFINED_DATA_PATH: "/data/refined_data"
+      GOOGLE_APPLICATION_CREDENTIALS: "/app/firebase-credentials.json"
     volumes:
       # Compartilha o mesmo volume novamente
       - ./data_pipeline/data:/data
+      - ./data_pipeline/secrets/firebase-credentials.json:/app/firebase-credentials.json
     
 
   # dashboard:
