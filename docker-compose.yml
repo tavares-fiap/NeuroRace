@@ -48,10 +48,59 @@ services:
       POOR_SIGNAL_LEVEL_THRESHOLD: "0"
       EEG_HOST: "simulator-b"
       # EEG_HOST: "host.docker.internal"
+
     command: python acquisition_service.py
     depends_on: 
       - broker
       - simulator-b
+
+  raw_data_collector:
+    build: ./data_pipeline/raw_data_collector
+    environment:
+      BROKER_URL: "http://broker:3000"
+      RAW_DATA_PATH: "/data/raw_data" # ATUALIZADO
+    volumes:
+      # Mapeia a pasta `data` local para a pasta `/data` do container
+      - ./data_pipeline/data:/data # ATUALIZADO
+    depends_on:
+      - broker
+    command: sh -c "sleep 5 && python -u collector.py"
+
+  # etl_processor:
+  #   build: ./data_pipeline/etl_processor
+  #   environment:
+  #     RAW_DATA_PATH: "/data/raw_data"
+  #     TRUSTED_DATA_PATH: "/data/trusted_data"
+  #   volumes:
+  #     # Compartilha EXATAMENTE O MESMO volume
+  #     - ./data_pipeline/data:/data # ATUALIZADO
+    
+  # refined_processor:
+  #   build: ./data_pipeline/refined_processor
+  #   environment:
+  #     TRUSTED_DATA_PATH: "/data/trusted_data"
+  #     REFINED_DATA_PATH: "/data/refined_data"
+  #     GOOGLE_APPLICATION_CREDENTIALS: "/app/firebase-credentials.json"
+  #   volumes:
+  #     # Compartilha o mesmo volume novamente
+  #     - ./data_pipeline/data:/data
+  #     - ./data_pipeline/secrets/firebase-credentials.json:/app/firebase-credentials.json
+    
+
+  pipeline_worker:
+    build: ./data_pipeline/pipeline_worker
+    environment:
+      BROKER_URL: "http://broker:3000"
+      RAW_DATA_PATH: "/data/raw_data"
+      TRUSTED_DATA_PATH: "/data/trusted_data"
+      REFINED_DATA_PATH: "/data/refined_data"
+      GOOGLE_APPLICATION_CREDENTIALS: "/app/firebase-credentials.json"
+    volumes:
+      # Mapeia a pasta de dados e a de segredos
+      - ./data_pipeline/data:/data
+      - ./data_pipeline/secrets/firebase-credentials.json:/app/firebase-credentials.json
+    depends_on:
+      - broker
 
   # dashboard:
   #   build: ./dashboard
@@ -62,25 +111,5 @@ services:
   #   depends_on:
   #     - broker
 
-  # collector_service:
-  #   build: ./metrics_collector/collector_service
-  #   environment:
-  #     BROKER_URL: "http://broker:3000"
-  #   volumes:
-  #     - ./metrics_collector/results:/results
-  #   command: python collector_service.py
-  #   depends_on:
-  #     - broker
-  # analysis_service:
-  #   build: ./metrics_collector/analysis_service
-  #   environment:
-  #     BROKER_URL: "http://broker:3000"
-  #   volumes:
-  #     - ./metrics_collector/results:/results
-  #   depends_on:
-  #     - broker
-  #     - collector_service
-
 # volumes:
 #   db_data:
-

@@ -1,0 +1,32 @@
+{
+    "player_1": {
+        "valid_session_percentage": 78.95,
+        "tzf_percentage": 46.67,
+        "tzc_percentage": 40.0,
+        "calm_focus_percentage": 33.33,
+        "cvf_label": "Muito Oscilante",
+        "cvf_attention_std_dev": 32.55,
+        "fatigue_slope": 0.54588,
+        "post_event_focus_variation": {
+            "collision": -4.366666666666667,
+            "overtake": 12.225000000000001
+        },
+        "post_event_calm_variation": {
+            "collision": -1.0666666666666629,
+            "overtake": -3.75
+        },
+        "lfo_avg_recovery_seconds": null
+    },
+    "player_2": {
+        "valid_session_percentage": 100.0,
+        "tzf_percentage": 26.67,
+        "tzc_percentage": 53.33,
+        "calm_focus_percentage": 20.0,
+        "cvf_label": "Muito Oscilante",
+        "cvf_attention_std_dev": 33.26,
+        "fatigue_slope": 0.96501,
+        "post_event_focus_variation": {},
+        "post_event_calm_variation": {},
+        "lfo_avg_recovery_seconds": null
+    }
+}

@@ -1,0 +1,13 @@
+pandas
+pyarrow
+numpy
+python-socketio[client]
+
+# --- Versões Pinadas para Google/Firebase para Acelerar o Build ---
+firebase-admin==6.5.0
+google-api-core==2.19.0
+google-auth==2.29.0
+google-cloud-core==2.4.1
+google-cloud-storage==2.16.0
+googleapis-common-protos==1.63.0
+protobuf==4.25.3
