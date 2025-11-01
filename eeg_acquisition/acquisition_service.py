@@ -3,7 +3,7 @@ import socketio
 import time
 
 
-SOURCE = os.getenv("EEG_SOURCE", "sim")
+# SOURCE = os.getenv("EEG_SOURCE", "sim")
 PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
 ACQ_PORT  = int(os.getenv('ACQ_PORT', '13854'))
 HOST = os.getenv('EEG_HOST', '127.0.0.1')
@@ -12,10 +12,10 @@ BROKER_URL = os.getenv('BROKER_URL', 'http://broker:3000')
 print(f"[ACQ] EEG_HOST={HOST} PORT={ACQ_PORT} BROKER_URL={BROKER_URL}")
 
 BUFFER_SIZE = 4096
-N_READINGS = int(os.getenv('N_READINGS', '5')) # janela de leituras para média móvel (rolling window)
+# N_READINGS = int(os.getenv('N_READINGS', '5')) # janela de leituras para média móvel (rolling window)
 POOR_SIGNAL_LEVEL_THRESHOLD = int(os.getenv('POOR_SIGNAL_LEVEL_THRESHOLD', '50')) # com o neurosky, provavelmente o limite sera 0. Por enquanto usamos 100 pois sao numeros completamente aleatorios
 
-window = []
+# window = []
 
 def signal_status(psl: int | None, threshold: int) -> str:
     if psl is None:
@@ -24,8 +24,14 @@ def signal_status(psl: int | None, threshold: int) -> str:
         return "no-signal"
     return "ok" if psl <= threshold else "poor"
 
+# def extract_attention(packet):
+#     e = packet.get('eSense') or {}
+#     return e.get('attention')
+
 # def filter_attention(packet):
 #     attention_raw = extract_attention(packet)
+#     if attention_raw is None:
+#         return None
 #     window.append(attention_raw)
 #     if len(window) > N_READINGS:
 #         window.pop(0)
@@ -73,12 +79,13 @@ def start_acquisition_service():
                     psl = packet.get('poorSignalLevel')
                     status = signal_status(psl, POOR_SIGNAL_LEVEL_THRESHOLD)
                     # att_smooth = filter_attention(packet)
-                    # print("\n-----sent attention=----")
-                    # print(att_smooth)
-                    # sio.emit('attention', {
-                    #     'player': PLAYER_ID,
-                    #     'attention': att_smooth
-                    # })
+                    # if att_smooth is not None:
+                    #     sio.emit('attention', {
+                    #         'player': PLAYER_ID,
+                    #         'attention': att_smooth,
+                    #         'timeStamp': now_ms
+                    #     })
+
                     sio.emit('eSense', {
                         'player': PLAYER_ID,
                         'attention': packet['eSense']['attention'],

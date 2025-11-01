@@ -11,10 +11,4 @@ io.on('connection', socket => {
 
   socket.on('raceStarted', forward('raceStarted'));
   socket.on('hasFinished',  forward('hasFinished'));
-
-  // socket.on('attention', data => {
-  //   console.log("\n=-=-=-=-received data=-=-=-=-")
-  //   console.log(data)
-  //   socket.broadcast.emit('attention', data);
-  // });
 });
