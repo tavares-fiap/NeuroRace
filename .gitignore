@@ -1,6 +1,9 @@
 # Node
 /data_broker/node_modules/
 
+# Credenciais do Google Cloud / Firebase
+data_pipeline/secrets/
+
 # Python bytecode
 __pycache__/
 *.py[cod]
