@@ -2,7 +2,7 @@
 /data_broker/node_modules/
 
 # Credenciais do Google Cloud / Firebase
-data_pipeline/secrets/
+data_pipeline/secrets/firebase-credentials.json
 
 # Python bytecode
 __pycache__/
@@ -12,3 +12,5 @@ __pycache__/
 
 /env/central.env
 /env/collector.env
+
+data_pipeline/data/

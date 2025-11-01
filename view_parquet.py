@@ -4,7 +4,7 @@ from pathlib import Path
 
 # --- Configure o caminho para o arquivo Parquet que você quer ver ---
 # Substitua pelo nome do arquivo que você gerou
-SESSION_ID = "test-session-df492c66-7638-49ec-b686-40a089413e99"
+SESSION_ID = "test-session-c59aad30-287a-4aec-8e48-8d9fb4b48fb9"
 file_path = Path("data_pipeline") / "data" / "trusted_data" / f"{SESSION_ID}.parquet"
 
 if not file_path.exists():
