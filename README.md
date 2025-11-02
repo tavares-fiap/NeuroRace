@@ -168,5 +168,30 @@ Com a infraestrutura de dados completa e automatizada, o foco do projeto se volt
 
 ---
 
-*Legenda: Protótipos do Dashboard e do Jogo em desenvolvimento.*
-![Dashboard Preview](./images/dashboard1.gif)![Game Preview](./images/game2.gif)
+## 🎮 Jogo (Unreal) — Status & Integração
+
+**Status:** em desenvolvimento. O jogo é um **runner** com **tela dividida** e obstáculos. Já **recebe dados simulados** do Broker e ajusta a velocidade dos personagens conforme `attention`.
+
+**Conexão esperada (lado do jogo):** cliente Socket.IO para `ws://<HOST_DO_BROKER>:3000`, escutando o evento:
+
+```json
+{ "player": 1 | 2, "attention": <float> }
+```
+
+> ![Jogo — Tela dividida](./images/game2.gif)
+> *Legenda: Imagens do jogo em desenvolvimento.*
+
+---
+
+## 📊 Dashboard — Status & Demonstrações
+
+**Status:** protótipo em teste (UI/estética em definição) — **não está neste repositório** ainda.
+
+> ![Dashboard — UI A](./images/dashboard1.gif)
+> *Legenda: Prototipo do dashboard*
+
+---
+
+## 📄 Licença
+
+Este projeto está sob a [MIT License](LICENSE).
