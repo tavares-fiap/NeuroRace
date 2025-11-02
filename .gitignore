@@ -10,7 +10,4 @@ __pycache__/
 *.pyo
 
 
-/env/central.env
-/env/collector.env
-
 data_pipeline/data/
