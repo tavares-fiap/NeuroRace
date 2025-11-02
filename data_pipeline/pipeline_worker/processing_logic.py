@@ -1,5 +1,3 @@
-# data_pipeline/pipeline_worker/processing_logic.py
-
 import os
 import json
 import pandas as pd
@@ -12,6 +10,7 @@ from firebase_admin import credentials, firestore
 # --- Configuração dos Parâmetros de Análise ---
 FOCUS_THRESHOLD = 70
 CALM_THRESHOLD = 60
+PERCENTILES_TO_CALCULATE = [25, 50, 75, 90]
 
 # ==============================================================================
 # SEÇÃO 1: LÓGICA DO ETL (RAW -> TRUSTED) - (Sem alterações)
@@ -75,15 +74,58 @@ def process_session(session_id: str, raw_path: Path, trusted_path: Path):
     print(f"[ETL] Camada Trusted salva em {output_path}")
 
 # ==============================================================================
-# SEÇÃO 2: LÓGICA DE CÁLCULO DE KPIs E ATUALIZAÇÃO DE USUÁRIOS (TRUSTED -> REFINED)
+# SEÇÃO 2: LÓGICA DE DATA SCIENCE E CÁLCULO DE KPIS (TRUSTED -> REFINED)
 # ==============================================================================
 
+def update_global_stats(db, session_kpis):
+    """
+    Lê as estatísticas globais, adiciona os dados da sessão atual e
+    recalcula as médias e percentis.
+    """
+    print("[DATA_SCIENCE] Atualizando estatísticas globais...")
+    stats_ref = db.collection('global_stats').document('summary')
+    
+    @firestore.transactional
+    def update_in_transaction(transaction, stats_ref, current_session_kpis):
+        snapshot = stats_ref.get(transaction=transaction)
+        stats = snapshot.to_dict() if snapshot.exists else {'all_tzf': [], 'all_lfo': []}
+
+        for _, kpis in current_session_kpis.items():
+            stats['all_tzf'].append(kpis['tzf_percentage'])
+            if kpis.get('lfo_avg_recovery_seconds') is not None:
+                stats['all_lfo'].append(kpis['lfo_avg_recovery_seconds'])
+        
+        all_tzf_series = pd.Series(stats['all_tzf'])
+        all_lfo_series = pd.Series(stats['all_lfo'])
+        
+        stats['totalRacesAnalyzed'] = len(all_tzf_series)
+        stats['averageTzf'] = all_tzf_series.mean()
+        stats['averageLfoSeconds'] = all_lfo_series.mean()
+        
+        tzf_percentiles = all_tzf_series.quantile([p/100 for p in PERCENTILES_TO_CALCULATE]).to_dict()
+        lfo_percentiles = all_lfo_series.quantile([p/100 for p in PERCENTILES_TO_CALCULATE]).to_dict()
+        
+        # O Firestore não lida bem com chaves float, então convertemos para string
+        stats['percentiles'] = {
+            'tzf': {str(p): v for p, v in tzf_percentiles.items()},
+            'lfoSeconds': {str(p): v for p, v in lfo_percentiles.items()}
+        }
+        
+        transaction.set(stats_ref, stats)
+
+    transaction = db.transaction()
+    update_in_transaction(transaction, stats_ref, session_kpis)
+    print("[DATA_SCIENCE] Estatísticas globais atualizadas com sucesso.")
+
+# ... (funções get_cvf_label, calculate_post_event_metrics, update_user_profiles - sem alterações) ...
 def get_cvf_label(std_dev: float) -> str:
+    # ... (código sem alterações)
     if std_dev < 15: return "Estável"
     elif std_dev < 25: return "Oscilante"
     else: return "Muito Oscilante"
 
 def calculate_post_event_metrics(df_valid_signal: pd.DataFrame, events_df: pd.DataFrame, window_seconds: int = 5):
+    # ... (código sem alterações)
     if events_df.empty: return {}, {}, None
     results = []
     for _, event in events_df.iterrows():
@@ -108,52 +150,40 @@ def calculate_post_event_metrics(df_valid_signal: pd.DataFrame, events_df: pd.Da
     return focus_variation, calm_variation, avg_lfo
 
 def update_user_profiles(db, session_id, session_kpis, events_df):
-    """Lê perfis de usuário (buscando por email), atualiza estatísticas e salva de volta."""
+    # ... (código sem alterações)
     print("[USERS] Iniciando atualização de perfis de usuário...")
-    
     start_event_rows = events_df[events_df['eventType'] == 'raceStarted']
     if start_event_rows.empty:
         print("[USERS] Aviso: Evento 'raceStarted' não encontrado. Pulando atualização.")
         return
-        
-    user_map_list = start_event_rows.iloc[0].get('users', [])
+    start_event = start_event_rows.iloc[0]
+    user_map_list = start_event.get('users', [])
     if not user_map_list:
         print("[USERS] Aviso: Mapeamento de usuários (com email) não encontrado. Pulando atualização.")
         return
-
     user_mapping = {item['playerId']: item['email'] for item in user_map_list}
     finish_events = events_df[events_df['eventType'] == 'hasFinished']
     race_times = {row['player']: row['raceTimeSeconds'] for _, row in finish_events.iterrows()}
     winner_id = min(race_times, key=race_times.get) if race_times else None
-
     for player_id_str, kpis in session_kpis.items():
         player_id = int(player_id_str.split('_')[1])
         email = user_mapping.get(player_id)
         if not email:
             continue
-
         print(f"  - Processando perfil para o email: {email} (Player {player_id})")
         users_ref = db.collection('users')
-        
-        # Faz a query para encontrar o usuário pelo email
         user_query = users_ref.where('email', '==', email).limit(1).get()
-        
         if user_query:
-            # Usuário encontrado, atualiza
             user_doc = user_query[0]
             user_ref = user_doc.reference
             print(f"    - Usuário encontrado com ID: {user_doc.id}. Atualizando.")
         else:
-            # Usuário não encontrado, cria um novo
-            user_ref = users_ref.document() # Firestore gera um Auto-ID
+            user_ref = users_ref.document()
             print(f"    - Usuário novo. Criando com ID: {user_ref.id}.")
-
         @firestore.transactional
         def update_in_transaction(transaction, user_ref):
             snapshot = user_ref.get(transaction=transaction)
             new_data = snapshot.to_dict() if snapshot.exists else {"email": email, "createdAt": datetime.utcnow().isoformat()}
-            
-            # Lógica de atualização (mesma de antes)
             new_data['totalRaces'] = new_data.get('totalRaces', 0) + 1
             if player_id == winner_id:
                 new_data['totalWins'] = new_data.get('totalWins', 0) + 1
@@ -168,11 +198,12 @@ def update_user_profiles(db, session_id, session_kpis, events_df):
             history.append(new_race_summary)
             new_data['raceHistory'] = history[-10:]
             transaction.set(user_ref, new_data)
-
         transaction = db.transaction()
         update_in_transaction(transaction, user_ref)
 
+
 def calculate_kpis_for_session(session_id: str, trusted_path: Path, refined_path: Path, raw_path: Path):
+    # ... (lógica inicial de carregar o parquet e iterar pelos jogadores - sem alterações) ...
     print(f"[REFINED] Iniciando cálculo de KPIs para a Session ID: {session_id}")
     trusted_file = trusted_path / f"{session_id}.parquet"
     if not trusted_file.exists():
@@ -183,7 +214,7 @@ def calculate_kpis_for_session(session_id: str, trusted_path: Path, refined_path
     
     for player_id in players:
         player_id = int(player_id)
-        # ... (cálculo dos KPIs - sem alterações) ...
+        # ... (cálculo de KPIs para um jogador - sem alterações) ...
         player_df = df[df['player'] == player_id].copy()
         df_valid_signal = player_df[player_df['is_signal_valid']].copy()
         if df_valid_signal.empty: continue
@@ -205,23 +236,27 @@ def calculate_kpis_for_session(session_id: str, trusted_path: Path, refined_path
         print(f"  - KPIs calculados: {json.dumps(player_kpis, indent=2)}")
 
     if session_kpis:
-        # ... (código para salvar sumário local e na coleção 'sessions' - sem alterações) ...
-        refined_path.mkdir(parents=True, exist_ok=True)
-        output_path = refined_path / f"{session_id}_summary.json"
-        with open(output_path, 'w') as f: json.dump(session_kpis, f, indent=4)
-        print(f"\n[REFINED] Sumário de KPIs salvo em {output_path}")
         try:
             print("[FIREBASE] Autenticando...")
             if not firebase_admin._apps:
                 cred = credentials.ApplicationDefault()
                 firebase_admin.initialize_app(cred)
             db = firestore.client()
+
+            # --- FLUXO DE DATA SCIENCE ATUALIZADO ---
+            # 1. Primeiro, atualizamos as estatísticas globais com os novos KPIs
+            update_global_stats(db, session_kpis)
+            
+            # 2. Em seguida, salvamos os dados da sessão (agora sem o campo de contexto)
             doc_ref = db.collection('sessions').document(session_id)
             doc_ref.set(session_kpis)
             print(f"[FIREBASE] Dados da sessão {session_id} salvos com sucesso!")
+            
+            # 3. Finalmente, atualizamos os perfis de usuário, como antes
             events_df = load_game_events(raw_path / session_id)
             if not events_df.empty:
                 update_user_profiles(db, session_id, session_kpis, events_df)
                 print("[USERS] Perfis de usuário atualizados com sucesso.")
+
         except Exception as e:
             print(f"[FIREBASE] Erro ao salvar dados no Firestore: {e}")
