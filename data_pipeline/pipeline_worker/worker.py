@@ -41,7 +41,7 @@ def on_race_finished(data):
         process_session(session_id, RAW_DATA_PATH, TRUSTED_DATA_PATH)
         
         # --- Passo 2: Executar a lógica do Refined (Trusted -> Refined/Firebase) ---
-        calculate_kpis_for_session(session_id, TRUSTED_DATA_PATH, REFINED_DATA_PATH)
+        calculate_kpis_for_session(session_id, TRUSTED_DATA_PATH, REFINED_DATA_PATH, RAW_DATA_PATH)
         
         print(f"\n[WORKER] Pipeline completo para {session_id} finalizado com sucesso.")
         print("="*50)

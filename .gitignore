@@ -1,6 +1,9 @@
 # Node
 /data_broker/node_modules/
 
+# Data files
+data_pipeline/data/
+
 # Credenciais do Google Cloud / Firebase
 data_pipeline/secrets/
 
