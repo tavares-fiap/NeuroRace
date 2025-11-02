@@ -11,7 +11,3 @@ data_pipeline/secrets/
 __pycache__/
 *.py[cod]
 *.pyo
-
-
-/env/central.env
-/env/collector.env
