@@ -16,11 +16,11 @@ O NeuroRace opera com uma arquitetura de microsserviços orientada a eventos, pr
 graph TD
     subgraph "PC do Jogador"
         A1[EEG: Simulador / NeuroSky] --> B1[Acquisition Service];
-        C[Jogo Unreal Engine] -- Eventos (início, colisão, fim) --> D[Data Broker];
+        C[Jogo Unreal Engine] -- "Eventos (início, colisão, fim)" --> D[Data Broker];
     end
 
     subgraph "Backend (Serviços Docker)"
-        B1 -- Dados EEG (eSense) --> D;
+        B1 -- "Dados EEG (eSense)" --> D;
         D -- Broadcast --> E[Raw Data Collector];
         D -- Broadcast --> C;
         D -- Broadcast --> F[Pipeline Worker];
@@ -30,13 +30,13 @@ graph TD
         G[Firestore DB];
     end
 
-    E -- Salva --> H{Camada Raw (.jsonl)};
-    F -- Ouve "hasFinished" --> D;
+    E -- Salva --> H{"Camada Raw (.jsonl)"};
+    F -- "Ouve 'hasFinished'" --> D;
     F -- Lê --> H;
-    F -- Processa e Salva --> I{Camada Trusted (.parquet)};
+    F -- "Processa e Salva" --> I{"Camada Trusted (.parquet)"};
     F -- Lê --> I;
-    F -- Calcula KPIs e Salva --> J{Camada Refined (.json)};
-    F -- Envia Dados --> G;
+    F -- "Calcula KPIs e Salva" --> J{"Camada Refined (.json)"};
+    F -- "Envia Dados" --> G;
 
     style A1 fill:#cde4ff
     style C fill:#cde4ff
@@ -159,15 +159,6 @@ Com base nesses dados, nosso **Coach Virtual** gera dois tipos de feedback: uma 
 
 ---
 
-## 🗺️ Próximos Passos
-
-Com a infraestrutura de dados completa e automatizada, o foco do projeto se volta para:
-1.  **Front-end & Dashboard:** Construir as interfaces para visualizar os rankings, históricos de corridas e os feedbacks do coach, consumindo os dados diretamente do Firestore.
-2.  **Integração com o Jogo:** Portar a lógica do `test_emitter.py` para o cliente do jogo em Unreal Engine, para que ele emita os eventos reais.
-3.  **Deployment em Produção:** Migrar os serviços Docker para um ambiente de nuvem para garantir a disponibilidade durante o evento Next FIAP.
-
----
-
 ## 🎮 Jogo (Unreal) — Status & Integração
 
 **Status:** em desenvolvimento. O jogo é um **runner** com **tela dividida** e obstáculos. Já **recebe dados simulados** do Broker e ajusta a velocidade dos personagens conforme `attention`.
@@ -189,6 +180,15 @@ Com a infraestrutura de dados completa e automatizada, o foco do projeto se volt
 
 > ![Dashboard — UI A](./images/dashboard1.gif)
 > *Legenda: Prototipo do dashboard*
+
+---
+
+## 🗺️ Próximos Passos
+
+Com a infraestrutura de dados completa e automatizada, o foco do projeto se volta para:
+1.  **Front-end & Dashboard:** Construir as interfaces para visualizar os rankings, históricos de corridas e os feedbacks do coach, consumindo os dados diretamente do Firestore.
+2.  **Integração com o Jogo:** Portar a lógica do `test_emitter.py` para o cliente do jogo em Unreal Engine, para que ele emita os eventos reais.
+3.  **Deployment em Produção:** Migrar os serviços Docker para um ambiente de nuvem para garantir a disponibilidade durante o evento Next FIAP.
 
 ---
 
