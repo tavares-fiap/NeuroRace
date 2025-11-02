@@ -1,27 +1,37 @@
-# data_pipeline/pipeline_worker/worker.py
-
 import os
 import socketio
 from pathlib import Path
+import logging
 from processing_logic import process_session, calculate_kpis_for_session
 
-# --- Configuração ---
+# ==============================================================================
+# SEÇÃO DE CONFIGURAÇÃO DO LOGGING
+# ==============================================================================
+log_format = '%(asctime)s - %(levelname)s - [%(name)s] - %(message)s'
+logging.basicConfig(level=logging.INFO, format=log_format)
+logging.getLogger("engineio.client").setLevel(logging.WARNING)
+logging.getLogger("socketio.client").setLevel(logging.WARNING)
+log = logging.getLogger(__name__)
+
+# ==============================================================================
+# SEÇÃO DE CONFIGURAÇÃO DO SERVIÇO
+# ==============================================================================
 BROKER_URL = os.getenv('BROKER_URL', 'http://localhost:3000')
 RAW_DATA_PATH = Path(os.getenv('RAW_DATA_PATH', '/data/raw_data'))
 TRUSTED_DATA_PATH = Path(os.getenv('TRUSTED_DATA_PATH', '/data/trusted_data'))
 REFINED_DATA_PATH = Path(os.getenv('REFINED_DATA_PATH', '/data/refined_data'))
 
-print(f"[WORKER] Conectando ao Broker em {BROKER_URL}")
+log.info(f"Worker iniciado. Conectando ao Broker em {BROKER_URL}")
 
 sio = socketio.Client()
 
 @sio.event
 def connect():
-    print('[WORKER] Conectado ao Broker, aguardando corridas...')
+    log.info("Conectado ao Broker com sucesso. Aguardando corridas...")
 
 @sio.event
 def disconnect():
-    print('[WORKER] Desconectado do Broker')
+    log.warning("Desconectado do Broker.")
 
 @sio.on('hasFinished')
 def on_race_finished(data):
@@ -30,11 +40,11 @@ def on_race_finished(data):
     """
     session_id = data.get('sessionId')
     if not session_id:
-        print("[WORKER] Erro: evento 'hasFinished' sem 'sessionId'.")
+        log.error("Evento 'hasFinished' recebido sem 'sessionId'. Ignorando.")
         return
         
-    print(f"\n[WORKER] Recebido sinal de fim de corrida para Session ID: {session_id}")
-    print("="*50)
+    log.info("="*60)
+    log.info(f"Sinal de fim de corrida recebido. Iniciando pipeline para Session ID: {session_id}")
     
     try:
         # --- Passo 1: Executar a lógica do ETL (Raw -> Trusted) ---
@@ -43,13 +53,21 @@ def on_race_finished(data):
         # --- Passo 2: Executar a lógica do Refined (Trusted -> Refined/Firebase) ---
         calculate_kpis_for_session(session_id, TRUSTED_DATA_PATH, REFINED_DATA_PATH, RAW_DATA_PATH)
         
-        print(f"\n[WORKER] Pipeline completo para {session_id} finalizado com sucesso.")
-        print("="*50)
+        log.info(f"Pipeline para {session_id} finalizado com sucesso.")
         
-    except Exception as e:
-        print(f"[WORKER] ERRO CRÍTICO durante o processamento da sessão {session_id}: {e}")
+    except FileNotFoundError as e:
+        log.error(f"Falha no pipeline para {session_id}: Arquivos da sessão não encontrados. Detalhe: {e}")
+    except Exception:
+        log.critical(f"ERRO CRÍTICO no pipeline para {session_id}.", exc_info=True)
+    finally:
+        log.info("="*60)
+
 
 if __name__ == '__main__':
-    # Inicia a conexão com o broker e espera por eventos para sempre
-    sio.connect(BROKER_URL, wait=True, wait_timeout=10, transports='websocket')
-    sio.wait()
+    try:
+        sio.connect(BROKER_URL, wait=True, wait_timeout=30, transports='websocket')
+        sio.wait()
+    except socketio.exceptions.ConnectionError as e:
+        log.critical(f"Não foi possível conectar ao Broker em {BROKER_URL}. Encerrando. Erro: {e}")
+    except Exception:
+        log.critical("Uma exceção não tratada ocorreu no loop principal.", exc_info=True)
