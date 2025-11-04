@@ -9,6 +9,7 @@ services:
     ports:
       - "13854:13854"
     profiles: ['sim-dual']
+    
   acquisition:
     build: ./eeg_acquisition
     extra_hosts:

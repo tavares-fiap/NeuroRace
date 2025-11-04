@@ -12,5 +12,4 @@ __pycache__/
 *.py[cod]
 *.pyo
 
-
-data_pipeline/data/
+gesture_detector/env
