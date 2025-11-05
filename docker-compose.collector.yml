@@ -1,6 +1,6 @@
 services:
 
-  simulator:
+  simulator-b:
     build: ./eeg_acquisition
     environment:
       ACQ_PORT: 13854
@@ -10,7 +10,7 @@ services:
       - "13854:13854"
     profiles: ['sim-dual']
     
-  acquisition:
+  acquisition-b:
     build: ./eeg_acquisition
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -18,7 +18,7 @@ services:
       PLAYER_ID: 2
       ACQ_PORT: 13854
       BROKER_URL: http://192.168.15.10:3000
-      POOR_SIGNAL_LEVEL_THRESHOLD: 1.0
+      POOR_SIGNAL_LEVEL_THRESHOLD: 0
       EEG_HOST: simulator-b
       # EEG_HOST_B=host.docker.internal
     command: python acquisition_service.py
