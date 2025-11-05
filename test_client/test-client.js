@@ -10,6 +10,7 @@ socket.on('connect_error', (err) => console.error('Erro de conexão:', err.messa
 
 socket.on('eSense', (data) => console.log('eSense:', data));
 socket.on('blink', (data) => console.log('blink:', data));
+socket.on('handGesture', (data) => console.log('handGesture:', data));
 
 
 

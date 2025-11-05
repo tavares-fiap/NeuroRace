@@ -43,6 +43,8 @@ services:
 
   acquisition-b:
     build: ./eeg_acquisition
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       PLAYER_ID: 2
       ACQ_PORT: 13855
@@ -62,7 +64,7 @@ services:
     depends_on:
       - broker
 
-  raw_data_collector:
+  raw-data-collector:
     build: ./data_pipeline/raw_data_collector
     environment:
       BROKER_URL: "http://broker:3000"

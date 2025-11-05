@@ -17,6 +17,7 @@ io.on('connection', (socket) => {
   };
   socket.on('blink',   forward('blink'));
   socket.on('eSense',  forward('eSense'));
+  socket.on('handGesture',  forward('handGesture'));
 
   socket.on('raceStarted', forward('raceStarted'));
   socket.on('hasFinished',  forward('hasFinished'));
