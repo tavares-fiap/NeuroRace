@@ -9,6 +9,11 @@ const io = require('socket.io')(3000, {
 
 console.log('Broker conectado, aguardando conexões em :3000 ...');
 
+const currentSources = {
+  player1: 'real',
+  player2: 'real'
+};
+
 io.on('connection', (socket) => {
   console.log('Cliente conectado:', socket.id);
   const forward = (event) => (payload) => {

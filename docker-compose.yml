@@ -33,12 +33,13 @@ services:
       ACQ_PORT: 13854
       BROKER_URL: http://broker:3000
       POOR_SIGNAL_LEVEL_THRESHOLD: 0
-      EEG_HOST: simulator-a
-      # EEG_HOST: "host.docker.internal"
+      # EEG_HOST: simulator-a
+      SOURCE: real
+      EEG_HOST: "host.docker.internal"
     command: python acquisition_service.py
     depends_on: 
       - broker
-      - simulator-a
+      # - simulator-a
     profiles: ['sim-local', 'sim-dual', 'hybrid-local', 'live']
 
   acquisition-b:
@@ -51,6 +52,7 @@ services:
       BROKER_URL: http://broker:3000
       POOR_SIGNAL_LEVEL_THRESHOLD: 0
       EEG_HOST: simulator-b
+      SOURCE: bot
     command: python acquisition_service.py
     depends_on:
       - broker

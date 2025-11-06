@@ -20,6 +20,7 @@ PLAYER_ID = int(os.getenv('PLAYER_ID', '1'))
 ACQ_PORT  = int(os.getenv('ACQ_PORT', '13854'))
 HOST = os.getenv('EEG_HOST', '127.0.0.1')
 BROKER_URL = os.getenv('BROKER_URL', 'http://broker:3000')
+SOURCE = os.getenv('SOURCE', 'real')
 
 log.info(f"Serviço de Aquisição para Player {PLAYER_ID} iniciado.")
 log.info(f"Conectando à fonte de EEG em {HOST}:{ACQ_PORT}")
@@ -92,12 +93,12 @@ def start_acquisition_service():
 
                 now_ms = int(time.time() * 1000)
 
-                if 'blinkStrength' in packet:
-                    sio.emit('blink', {
-                        'player': PLAYER_ID,
-                        'blink': packet['blinkStrength'],
-                        'timeStamp': now_ms
-                    })
+                # if 'blinkStrength' in packet:
+                #     sio.emit('blink', {
+                #         'player': PLAYER_ID,
+                #         'blink': packet['blinkStrength'],
+                #         'timeStamp': now_ms
+                #     })
                 if 'eSense' in packet:
                     psl = packet.get('poorSignalLevel')
                     status = signal_status(psl, POOR_SIGNAL_LEVEL_THRESHOLD)
@@ -109,6 +110,7 @@ def start_acquisition_service():
                         'eegPower': packet['eegPower'],
                         'poorSignalLevel': psl,
                         'status': status,
+                        'source': SOURCE,
                         'timeStamp': now_ms,
                     }
                     sio.emit('eSense', eSense_payload)
