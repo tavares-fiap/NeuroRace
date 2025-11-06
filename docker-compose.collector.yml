@@ -19,9 +19,10 @@ services:
       ACQ_PORT: 13854
       BROKER_URL: http://192.168.15.10:3000
       POOR_SIGNAL_LEVEL_THRESHOLD: 0
-      EEG_HOST: simulator-b
-      # EEG_HOST_B=host.docker.internal
+      # EEG_HOST: simulator-b
+      EEG_HOST_B: host.docker.internal
+      SOURCE: real
     command: python acquisition_service.py
     depends_on: 
-      - simulator-b
+      # - simulator-b
     profiles: ['sim-dual', 'live']
