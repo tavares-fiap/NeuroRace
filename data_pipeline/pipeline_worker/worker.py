@@ -27,24 +27,25 @@ sio = socketio.Client()
 
 @sio.event
 def connect():
-    log.info("Conectado ao Broker com sucesso. Aguardando corridas...")
+    log.info("Conectado ao Broker com sucesso. Aguardando gatilho do pipeline...")
 
 @sio.event
 def disconnect():
     log.warning("Desconectado do Broker.")
 
-@sio.on('hasFinished')
-def on_race_finished(data):
+@sio.on('pipelineTrigger')
+def on_pipeline_trigger(data):
     """
     Este é o GATILHO que inicia todo o pipeline de processamento.
+    Ele é disparado pelo raw_data_collector quando a corrida é confirmada como finalizada.
     """
     session_id = data.get('sessionId')
     if not session_id:
-        log.error("Evento 'hasFinished' recebido sem 'sessionId'. Ignorando.")
+        log.error("Evento 'pipelineTrigger' recebido sem 'sessionId'. Ignorando.")
         return
         
     log.info("="*60)
-    log.info(f"Sinal de fim de corrida recebido. Iniciando pipeline para Session ID: {session_id}")
+    log.info(f"Gatilho de pipeline recebido. Iniciando processamento para Session ID: {session_id}")
     
     try:
         # --- Passo 1: Executar a lógica do ETL (Raw -> Trusted) ---
